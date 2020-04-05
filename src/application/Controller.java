@@ -27,10 +27,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
-public class SampleController implements Initializable{
+public class Controller implements Initializable{
 	
 	
-
 	
 	ObservableList<String> chooseCurrencyList = FXCollections.observableArrayList("USD", "JPY");
 	String ticker = "";
@@ -62,12 +61,6 @@ public class SampleController implements Initializable{
 	@FXML private Button runButton;
 	
 	
-	//For the future
-	/*
-	ArrayList<String> currencies = Calculation.getCurrencies();
-	ObservableList<String> list = FXCollections.observableArrayList(currencies);
-	currencyBox.setItems(list);
-	*/
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -149,12 +142,8 @@ public class SampleController implements Initializable{
 		
 		
 		
-		//Reflect.. 
+		//Reflect the result in the chart. 
 		drawDCAViewChart();
-		
-		
-		
-		//System.out.println(startDates + ", " + endDates);
 		
 		
 	}
@@ -165,7 +154,8 @@ public class SampleController implements Initializable{
 	
 	
 	/**
-	 * Mthod to draw chart
+	 * Method to draw the default chart of the historical view. 
+	 * On-going. Current state is only inputs of default values. 
 	 */
 	public void drawHistoricalViewChart() {
 		series = new XYChart.Series<String, Integer> ();
@@ -181,6 +171,9 @@ public class SampleController implements Initializable{
 		historicViewChart.getData().add(series);
 	}
 	
+	/**
+	 * Method to update the DCA values from the DollarCostAveraging method. 
+	 */
 	public void drawDCAViewChart() {
 		System.out.println("drawDCAViewChart is activated. ");
 		
@@ -200,12 +193,6 @@ public class SampleController implements Initializable{
 		}
 		System.out.println("Saved the data into DCAseries.");
 		
-		/*
-		DCAseries.getData().add(new XYChart.Data<Date, Integer>("1",2));
-		DCAseries.getData().add(new XYChart.Data<Date, Integer>("2",1));
-		DCAseries.getData().add(new XYChart.Data<Date, Integer>("3",5));
-		DCAseries.getData().add(new XYChart.Data<Date, Integer>("4",2));
-		*/
 		
 		DCAseries.setName("Original Return");
 		
@@ -214,6 +201,9 @@ public class SampleController implements Initializable{
 		DCAViewChart.setCreateSymbols(false);
 	}
 	
+	/**
+	 * Method to create multichart in the historicalview. 
+	 */
 	public void multiChart() {
 		/*lineChart.getData().clear(); //to delete the currnet line.*/
 		
@@ -229,12 +219,4 @@ public class SampleController implements Initializable{
 		System.out.println("this it to generate another line. ");
 	}
 	
-	/*
-	public void selectCurrency() {
-		investmentCurrency.setValue("USD");
-		investmentCurrency.setItems(chooseCurrencyList);
-		System.out.println("This is to generate currency");
-		
-	}
-	*/
 }
