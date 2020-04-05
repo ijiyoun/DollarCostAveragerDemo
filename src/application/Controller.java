@@ -27,6 +27,11 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
+/***
+ * Class to save user inputs and communicate with back end methods and show the graphs. 
+ * @author jiyoungim
+ *
+ */
 public class Controller implements Initializable{
 	
 	

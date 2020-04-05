@@ -7,7 +7,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.fxml.FXMLLoader;
 
 /***
- * Main method to run the application. 
+ * Main class to run the application. 
  * 
  * @author jiyoungim
  *
