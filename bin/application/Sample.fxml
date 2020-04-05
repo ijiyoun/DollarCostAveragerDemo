@@ -15,35 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
-   <right>
-      <Pane prefHeight="400.0" prefWidth="330.0" BorderPane.alignment="CENTER">
-         <children>
-            <VBox prefHeight="300.0" prefWidth="321.0">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Historical View&gt;" />
-                  <LineChart fx:id="historicViewChart" prefHeight="124.0" prefWidth="308.0">
-                    <xAxis>
-                      <CategoryAxis side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                  </LineChart>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Dollar Cost Averager&gt;" />
-                  <LineChart fx:id="DCAViewChart">
-                    <xAxis>
-                      <CategoryAxis side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                  </LineChart>
-               </children>
-            </VBox>
-         </children>
-      </Pane>
-   </right>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
    <top>
       <Text fill="#9e4040" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Dollar Cost Averager">
          <BorderPane.margin>
@@ -55,9 +27,9 @@
       </Text>
    </top>
    <left>
-      <HBox prefHeight="367.0" prefWidth="234.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="408.0" prefWidth="338.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="408.0" prefWidth="180.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ticker">
                      <VBox.margin>
@@ -69,7 +41,7 @@
                         <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Currency (for invest)">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Currency for investment">
                      <VBox.margin>
                         <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -89,7 +61,7 @@
                         <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Currency (for transaction)">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Currency for transaction">
                      <VBox.margin>
                         <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -101,9 +73,9 @@
                   </Text>
                </children>
             </VBox>
-            <VBox>
+            <VBox prefHeight="408.0" prefWidth="145.0" HBox.hgrow="NEVER">
                <children>
-                  <TextField fx:id="tickerInput" promptText="AMZN" />
+                  <TextField fx:id="tickerInput" prefWidth="151.0" promptText="AMZN" />
                   <TextField fx:id="investmentInput" promptText="0" />
                   <ChoiceBox fx:id="investmentCurrencyBox" prefWidth="150.0" />
                   <DatePicker fx:id="startDate" />
@@ -127,4 +99,32 @@
          </children>
       </HBox>
    </bottom>
+   <center>
+      <Pane prefHeight="408.0" prefWidth="0.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox layoutX="-4.0" prefHeight="444.0" prefWidth="455.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Historical View&gt;" wrappingWidth="128.91015625" />
+                  <LineChart fx:id="historicViewChart" prefHeight="196.0" prefWidth="429.0">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Dollar Cost Averager&gt;" />
+                  <LineChart fx:id="DCAViewChart" prefHeight="213.0" prefWidth="405.0">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </center>
 </BorderPane>

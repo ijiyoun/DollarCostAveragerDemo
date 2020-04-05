@@ -2,9 +2,14 @@ package application;
 
 import javafx.scene.control.Button;
 import java.net.URL;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javafx.beans.binding.Bindings;
@@ -17,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -35,6 +41,7 @@ public class SampleController implements Initializable{
 	Double investment = 0.0;
 	Double transactionCost = 0.0;
 	Double taxRate = 0.0;
+	HashMap<Date, Double>calResult = new HashMap<Date,Double>();
 	
 	
 	
@@ -42,8 +49,8 @@ public class SampleController implements Initializable{
 	@FXML private TextField tickerInput;
 	@FXML private LineChart<String, Integer>historicViewChart; // need to define X,Y
 	XYChart.Series<String, Integer> series = null; //need to generate line
-	@FXML private LineChart<String, Integer>DCAViewChart;
-	XYChart.Series<String, Integer> DCAseries = null;
+	@FXML private LineChart<String, Double>DCAViewChart;
+	Series<String, Double> DCAseries = null;
 	
 	@FXML private ChoiceBox investmentCurrencyBox;
 	@FXML private DatePicker startDate;
@@ -76,7 +83,7 @@ public class SampleController implements Initializable{
 		investmentCurrencyBox.setItems(chooseCurrencyList);
 		
 		//set the initial values of the datepicker.
-		startDate.setValue(LocalDate.of(2018, 1, 19));
+		startDate.setValue(LocalDate.of(2010, 1, 1));
 		endDate.setValue(LocalDate.now());
 		
 		
@@ -135,9 +142,12 @@ public class SampleController implements Initializable{
 		investment = Double.parseDouble(investmentInput.getText());
 		transactionCost = Double.parseDouble(transactionCostInput.getText());
 		taxRate = Double.parseDouble(taxRateInput.getText());
-		System.out.println(investmentCurrency + investment + transactionCost + taxRate + startDates);
+		System.out.println("Succesfully stored the daata into the variables");
 		
 		//Do smthin with the data
+		
+		
+		
 		
 		//Reflect.. 
 		drawDCAViewChart();
@@ -172,17 +182,36 @@ public class SampleController implements Initializable{
 	}
 	
 	public void drawDCAViewChart() {
-		DCAseries = new XYChart.Series<String, Integer> ();
+		System.out.println("drawDCAViewChart is activated. ");
 		
-		DCAseries.getData().add(new XYChart.Data<String, Integer>("1",2));
-		DCAseries.getData().add(new XYChart.Data<String, Integer>("2",1));
-		DCAseries.getData().add(new XYChart.Data<String, Integer>("3",5));
-		DCAseries.getData().add(new XYChart.Data<String, Integer>("4",2));
+		DollarCostAveraging dca = new DollarCostAveraging();
+		dca.run(ticker, investmentCurrency, transactionCurrency, startDates, endDates, investment, transactionCost, taxRate);
+		calResult = dca.calcResult;
+		
+		DCAseries = new XYChart.Series<String, Double> ();
+		
+		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
+		int i = 1;
+		for (Date key : calResult.keySet()) {
+			DCAseries.getData().add(new XYChart.Data<String, Double>(formatter.format(key), calResult.get(key)));
+			
+		}
+		System.out.println("Saved the data into DCAseries.");
+		
+		/*
+		DCAseries.getData().add(new XYChart.Data<Date, Integer>("1",2));
+		DCAseries.getData().add(new XYChart.Data<Date, Integer>("2",1));
+		DCAseries.getData().add(new XYChart.Data<Date, Integer>("3",5));
+		DCAseries.getData().add(new XYChart.Data<Date, Integer>("4",2));
+		*/
 		
 		DCAseries.setName("Original Return");
 		
 		//to add the series into the line chart
 		DCAViewChart.getData().add(DCAseries);
+		DCAViewChart.setCreateSymbols(false);
 	}
 	
 	public void multiChart() {
