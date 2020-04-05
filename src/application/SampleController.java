@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,24 +26,31 @@ public class SampleController implements Initializable{
 	
 
 	
-	ObservableList<String> chooseCurrencyList = FXCollections.observableArrayList("USD","USD", "JPY");
-	String currency = "";
+	ObservableList<String> chooseCurrencyList = FXCollections.observableArrayList("USD", "JPY");
+	String ticker = "";
+	String investmentCurrency = "";
+	String transactionCurrency = "";
 	String startDates = "";
 	String endDates = "";
-	String dividend = "";
-	String transactionCost = "";
-	String taxRate = "";
+	Double investment = 0.0;
+	Double transactionCost = 0.0;
+	Double taxRate = 0.0;
 	
 	
 	
 	
+	@FXML private TextField tickerInput;
 	@FXML private LineChart<String, Integer>historicViewChart; // need to define X,Y
 	XYChart.Series<String, Integer> series = null; //need to generate line
-	@FXML private ChoiceBox currencyBox;
+	@FXML private LineChart<String, Integer>DCAViewChart;
+	XYChart.Series<String, Integer> DCAseries = null;
+	
+	@FXML private ChoiceBox investmentCurrencyBox;
 	@FXML private DatePicker startDate;
 	@FXML private DatePicker endDate;
-	@FXML private TextField dividendInput;
+	@FXML private TextField investmentInput;
 	@FXML private TextField transactionCostInput;
+	@FXML private ChoiceBox transactionCurrencyBox;
 	@FXML private TextField taxRateInput;
 	@FXML private Button runButton;
 	
@@ -56,11 +65,15 @@ public class SampleController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("FXML Load Complete");
-		//drawChart();
+		drawHistoricalViewChart();
+		//disable the button if not all the inputs are made. 
+		
 		
 		//set the initial values of currencyBox. 
-		currencyBox.setValue("USD");
-		currencyBox.setItems(chooseCurrencyList);
+//		investmentCurrencyBox.setValue("USD");
+//		investmentCurrencyBox.setItems(chooseCurrencyList);
+		transactionCurrencyBox.setItems(chooseCurrencyList);
+		investmentCurrencyBox.setItems(chooseCurrencyList);
 		
 		//set the initial values of the datepicker.
 		startDate.setValue(LocalDate.of(2018, 1, 19));
@@ -68,14 +81,27 @@ public class SampleController implements Initializable{
 		
 		
 		//define the values of the input on the text field.
-		inputNumericOnly(dividendInput);
+		inputNumericOnly(investmentInput);
 		inputNumericOnly(transactionCostInput);
-		inputNumericOnly(taxRateInput);
+
 		
 		
+		//initially text box empty so disable. 
+		runButton.disableProperty().bind(
+			    Bindings.isEmpty(tickerInput.textProperty())
+			    .or(Bindings.isEmpty(investmentInput.textProperty()))
+			    .or(Bindings.isEmpty(transactionCostInput.textProperty()))
+			    .or(Bindings.isEmpty(taxRateInput.textProperty()))
+			);
+		
+		/*
+		if (transactionCurrencyBox.getSelectionModel().isEmpty() || investmentCurrencyBox.getSelectionModel().isEmpty()) {
+			runButton.setDisable(true);
+		}
+		*/
 		
 		
-		
+
 	}
 	
 
@@ -101,21 +127,32 @@ public class SampleController implements Initializable{
 	 * the method saves all the values into String/Number formats and draw charts. 
 	 */
 	public void clickedRunButton() {
+		
+		//Store the data
 		startDates = startDate.getValue().toString();
 		endDates = endDate.getValue().toString();
-		currency = currencyBox.getSelectionModel().getSelectedItem().toString();
-		dividend = dividendInput.getText();
-		transactionCost = transactionCostInput.getText();
-		taxRate = taxRateInput.getText();
-		System.out.println(currency + dividend + transactionCost + taxRate + startDates);
+		investmentCurrency = investmentCurrencyBox.getSelectionModel().getSelectedItem().toString();
+		investment = Double.parseDouble(investmentInput.getText());
+		transactionCost = Double.parseDouble(transactionCostInput.getText());
+		taxRate = Double.parseDouble(taxRateInput.getText());
+		System.out.println(investmentCurrency + investment + transactionCost + taxRate + startDates);
 		
-		drawHistoricalViewChart();
+		//Do smthin with the data
+		
+		//Reflect.. 
+		drawDCAViewChart();
+		
 		
 		
 		//System.out.println(startDates + ", " + endDates);
 		
 		
 	}
+	
+	/***
+	 * If the user does not input any value, then prevent the user
+	 */
+	
 	
 	/**
 	 * Mthod to draw chart
@@ -134,6 +171,20 @@ public class SampleController implements Initializable{
 		historicViewChart.getData().add(series);
 	}
 	
+	public void drawDCAViewChart() {
+		DCAseries = new XYChart.Series<String, Integer> ();
+		
+		DCAseries.getData().add(new XYChart.Data<String, Integer>("1",2));
+		DCAseries.getData().add(new XYChart.Data<String, Integer>("2",1));
+		DCAseries.getData().add(new XYChart.Data<String, Integer>("3",5));
+		DCAseries.getData().add(new XYChart.Data<String, Integer>("4",2));
+		
+		DCAseries.setName("Original Return");
+		
+		//to add the series into the line chart
+		DCAViewChart.getData().add(DCAseries);
+	}
+	
 	public void multiChart() {
 		/*lineChart.getData().clear(); //to delete the currnet line.*/
 		
@@ -149,10 +200,12 @@ public class SampleController implements Initializable{
 		System.out.println("this it to generate another line. ");
 	}
 	
+	/*
 	public void selectCurrency() {
-		currencyBox.setValue("USD");
-		currencyBox.setItems(chooseCurrencyList);
+		investmentCurrency.setValue("USD");
+		investmentCurrency.setItems(chooseCurrencyList);
 		System.out.println("This is to generate currency");
 		
 	}
+	*/
 }

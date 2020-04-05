@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
    <right>
       <Pane prefHeight="400.0" prefWidth="330.0" BorderPane.alignment="CENTER">
          <children>
@@ -31,7 +31,7 @@
                     </yAxis>
                   </LineChart>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Dollar Cost Averager&gt;" />
-                  <LineChart>
+                  <LineChart fx:id="DCAViewChart">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -103,13 +103,13 @@
             </VBox>
             <VBox>
                <children>
-                  <TextField promptText="AMZN" />
-                  <TextField fx:id="dividendInput" promptText="0" />
-                  <ChoiceBox fx:id="currencyBox" onDragDetected="#selectCurrency" prefWidth="150.0" />
+                  <TextField fx:id="tickerInput" promptText="AMZN" />
+                  <TextField fx:id="investmentInput" promptText="0" />
+                  <ChoiceBox fx:id="investmentCurrencyBox" prefWidth="150.0" />
                   <DatePicker fx:id="startDate" />
                   <DatePicker fx:id="endDate" />
                   <TextField fx:id="transactionCostInput" promptText="0" />
-                  <TextField />
+                  <ChoiceBox fx:id="transactionCurrencyBox" prefWidth="150.0" />
                   <TextField fx:id="taxRateInput" promptText="0.0" />
                </children>
             </VBox>
