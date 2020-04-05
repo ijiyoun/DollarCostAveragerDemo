@@ -11,11 +11,12 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <top>
       <Text fill="#9e4040" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Dollar Cost Averager">
          <BorderPane.margin>
@@ -83,29 +84,27 @@
                   <TextField fx:id="transactionCostInput" promptText="0" />
                   <ChoiceBox fx:id="transactionCurrencyBox" prefWidth="150.0" />
                   <TextField fx:id="taxRateInput" promptText="0.0" />
+                  <Region prefHeight="23.0" prefWidth="145.0" />
+                  <Button fx:id="runButton" mnemonicParsing="false" onAction="#clickedRunButton" text="Run" textAlignment="RIGHT">
+                     <VBox.margin>
+                        <Insets left="80.0" right="10.0" />
+                     </VBox.margin>
+                  </Button>
                </children>
             </VBox>
          </children>
       </HBox>
    </left>
    <bottom>
-      <HBox prefHeight="49.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="runButton" mnemonicParsing="false" onAction="#clickedRunButton" text="Run">
-               <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-      </HBox>
+      <HBox prefHeight="49.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
       <Pane prefHeight="408.0" prefWidth="0.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox layoutX="-4.0" prefHeight="444.0" prefWidth="455.0">
+            <VBox layoutX="-4.0" prefHeight="909.0" prefWidth="657.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Historical View&gt;" wrappingWidth="128.91015625" />
-                  <LineChart fx:id="historicViewChart" prefHeight="196.0" prefWidth="429.0">
+                  <LineChart fx:id="historicViewChart" prefHeight="400.0" prefWidth="657.0">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -114,7 +113,7 @@
                     </yAxis>
                   </LineChart>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Dollar Cost Averager&gt;" />
-                  <LineChart fx:id="DCAViewChart" prefHeight="213.0" prefWidth="405.0">
+                  <LineChart fx:id="DCAViewChart" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="400.0" prefWidth="657.0">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
