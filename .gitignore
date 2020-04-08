@@ -1,5 +1,6 @@
 # Bin file
 *.class
+/bin/
 
 # Log file
 *.log
