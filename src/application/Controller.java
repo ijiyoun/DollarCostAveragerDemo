@@ -3,14 +3,17 @@ package application;
 import javafx.scene.control.Button;
 import java.net.URL;
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -46,6 +49,7 @@ public class Controller implements Initializable{
 	Double transactionCost = 0.0;
 	Double taxRate = 0.0;
 	HashMap<Date, Double>calResult = new HashMap<Date,Double>();
+	TreeMap<Date, Double> calResultSorted = new TreeMap<Date, Double>();
 	
 	
 	
@@ -99,11 +103,7 @@ public class Controller implements Initializable{
 			    .or(Bindings.isEmpty(taxRateInput.textProperty()))
 			);
 		
-		/*
-		if (transactionCurrencyBox.getSelectionModel().isEmpty() || investmentCurrencyBox.getSelectionModel().isEmpty()) {
-			runButton.setDisable(true);
-		}
-		*/
+		
 		
 		
 
@@ -128,7 +128,7 @@ public class Controller implements Initializable{
 	}
 	
 	/***
-	 * This method is called when the user clicked the run button. 
+	 * This method is called when the user clicks the run button. 
 	 * the method saves all the values into String/Number formats and draw charts. 
 	 */
 	public void clickedRunButton() {
@@ -164,7 +164,23 @@ public class Controller implements Initializable{
 	 */
 	public void drawHistoricalViewChart() {
 		series = new XYChart.Series<String, Integer> ();
+		HistoricalData priceData = new HistoricalData();
+		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
+		Date startDateForHistoricalView = Util.parseDate("1871-01-01");
 		
+		
+		priceData.getData();
+		
+		priceData.pullClosestDataInstance(startDateForHistoricalView).getValue();
+		System.out.println(priceData.pullClosestDataInstance(startDateForHistoricalView).getValue());
+		
+		/*
+		HistoricalData priceData = new HistoricalData();
+		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
+		Date startDateForHistoricalGraph = Util.parseDate(startDates);
+				
+		System.out.println(priceData.pullClosestDataInstance(startDateForHistoricalGraph).getValue());
+		*/
 		series.getData().add(new XYChart.Data<String, Integer>("1",2));
 		series.getData().add(new XYChart.Data<String, Integer>("2",1));
 		series.getData().add(new XYChart.Data<String, Integer>("3",5));
@@ -185,6 +201,7 @@ public class Controller implements Initializable{
 		DollarCostAveraging dca = new DollarCostAveraging();
 		dca.run(ticker, investmentCurrency, transactionCurrency, startDates, endDates, investment, transactionCost, taxRate);
 		calResult = dca.calcResult;
+		calResultSorted.putAll(calResult);
 		
 		DCAseries = new XYChart.Series<String, Double> ();
 		
@@ -192,9 +209,8 @@ public class Controller implements Initializable{
 		
 		
 		int i = 1;
-		for (Date key : calResult.keySet()) {
-			DCAseries.getData().add(new XYChart.Data<String, Double>(formatter.format(key), calResult.get(key)));
-			
+		for (Date key : calResultSorted.keySet()) {
+			DCAseries.getData().add(new XYChart.Data<String, Double>(formatter.format(key), calResultSorted.get(key)));
 		}
 		System.out.println("Saved the data into DCAseries.");
 		
