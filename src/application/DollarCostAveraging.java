@@ -67,7 +67,6 @@ public class DollarCostAveraging {
 		
 	
 		//show results in order by date
-		//COMMENT: does this also update the calcResult sorted by dates?
 		for (int i = 0; i < calcResult.size(); i++) {
 			Calendar c = Calendar.getInstance();
 			c.setTime(Util.parseDate(startDateString));

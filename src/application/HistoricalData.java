@@ -60,6 +60,7 @@ public class HistoricalData {
 					dataInstance = data.get(i + 1);
 				} else if (date.compareTo(data.get(i + 1).getDate()) < 0) { //assign the closest preview value if the date doesn't match exactly
 					dataInstance = data.get(i);
+					System.out.println(i + "," + dataInstance);
 				}
 				i++; 
 			}
@@ -98,6 +99,7 @@ public class HistoricalData {
 	public ArrayList<HistoricalDataInstance> getData() {
 		return data;
 	}
+	
 
 	/**
 	 * returns HashMap of the HistoricalData
