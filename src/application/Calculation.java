@@ -4,21 +4,37 @@ import java.util.*;
 /**
  * Class to perform DollarCostAveraging calculations 
  * @author yayan
+ * 
+ * HistoricalData priceData; 
+ * HistoricalData dividendData; 
+ * HistoricalData foreignExchangeData;
  *
  */
 public class Calculation {
 
+	HistoricalData priceData; 
+	HistoricalData dividendData; 
+	HistoricalData foreignExchangeData;
+
+	public Calculation (HistoricalData priceData, HistoricalData dividendData, HistoricalData foreignExchangeData) {
+		this.priceData = priceData;
+		this.dividendData = dividendData;
+		this.foreignExchangeData = foreignExchangeData;
+	}
+
 	/**
 	 * Main method that returns Date/Double HashMap based on DollarCostAveraging calculations
-	 * @param priceData
-	 * @param dividendData
 	 * @param startDateString
 	 * @param endDateString
 	 * @param additionalInvestment
+	 * @param currency
 	 * @param numDaysBetweenInvestment
+	 * @param reinvest
+	 * @param commission
+	 * @param dividendTax
 	 * @return
 	 */
-	public HashMap<Date, Double> calculateDollarCostAveraging (HistoricalData priceData, HistoricalData dividendData, String startDateString, String endDateString, Double additionalInvestment, int numDaysBetweenInvestment) {
+	public HashMap<Date, Double> calculateDollarCostAveraging (String startDateString, String endDateString, Double additionalInvestment, String currency, int numDaysBetweenInvestment, Boolean reinvest, Double commission, Double dividendTax) {
 
 
 		HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
@@ -31,65 +47,76 @@ public class Calculation {
 		Date startDate = Util.parseDate(startDateString);
 		Date endDate = Util.parseDate(endDateString);
 		Date loopDate = startDate;
+		Date nextDateToAddCash = startDate;
 
-		
 
 
+
+
+
+		//loop over investment period from start to end date day by day
 		while (loopDate.compareTo(endDate) <= 0) {
 
 
-			//add code to exchange incremental dividends to USD if needed
+			//add incremental cash if equals next investment date
+			if (loopDate.equals(nextDateToAddCash)) {
+
+				//add code to exchange incremental investment to USD if needed
+
+				myPortfolio.addCashBalance(additionalInvestment);
+
+				//calculate date for the next investment
+				Calendar c = Calendar.getInstance();
+				c.setTime(loopDate);
+				c.add(Calendar.DATE, numDaysBetweenInvestment); //number of days to add
+				nextDateToAddCash = c.getTime();
+			}
 
 
 
 
-			//invest 1000 USD and calculate total value
-			myPortfolio.buyAssetByAmount("", additionalInvestment, loopDate, priceData.pullClosestDataInstance(loopDate).getValue());
+			//purchase assets if have cash (should have more than commission to buy)
+			Double currentCashBalance = myPortfolio.getCashBalance();
+
+			if (currentCashBalance > commission) {
+				if (myPortfolio.withdrawCashBalance(currentCashBalance)) {
+					myPortfolio.buyAssetByAmount("", additionalInvestment, loopDate, priceData.pullClosestDataInstance(loopDate).getValue());
+				}
+			}
+
+
+			//add dividends if they are distributed on this day
+			if (dividendData.exist(loopDate)) {
+
+
+			}
+
+			//calculate total value and add to the output HashMpap
 			Double totalValue = myPortfolio.updateAndReturnTotalValue(loopDate, priceData);	
-
-
-
-
-			//main output
 			calcResult.put(loopDate, totalValue);
 
 
+		//	System.out.println(loopDate + " cashbalance " + myPortfolio.getCashBalance() + " currentvalue " + totalValue);
 
-
-			//add code to add dividends (and re-invest them if needed) and apply taxes if needed
-
-
-
-
-
-
-			//calculate date for the next investment
+			//+1 day to the loopDate counter 
 			Calendar c = Calendar.getInstance();
 			c.setTime(loopDate);
-			c.add(Calendar.DATE, numDaysBetweenInvestment); //number of days to add
-			Date nextInvestmentDate = c.getTime();
-			
-			//add daily data on portfolio value before the next investment 
-			while ((loopDate.compareTo(nextInvestmentDate) < 0) && (loopDate.compareTo(endDate) <= 0)) {
-				
-				totalValue = myPortfolio.updateAndReturnTotalValue(loopDate, priceData);	
-				calcResult.put(loopDate, totalValue);
-				
-				c.setTime(loopDate);
-				c.add(Calendar.DATE, 1);
-				loopDate = c.getTime();
-				
-				
-			}
+			c.add(Calendar.DATE, 1);
+			loopDate = c.getTime();
+
+
+
 			
 			
-		
+
+
+
 
 
 		}
 
-
-
+		String ddd = "2017-1-1";
+		System.out.println(priceData.returnHashMap().get(Util.parseDate(ddd)));
 		return calcResult;
 
 	}

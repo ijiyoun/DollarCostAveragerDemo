@@ -45,7 +45,8 @@ public class DollarCostAveraging {
 		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
 		
 		//read dividend data
-		//code to be added 
+		HistoricalData dividendData = new HistoricalData();
+		dividendData = ReaderCSV.readFromCSV("sp500_dividends.csv");
 		
 		
 		//read FX data

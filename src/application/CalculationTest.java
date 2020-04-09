@@ -18,15 +18,23 @@ class CalculationTest {
 		HistoricalData priceData = new HistoricalData();
 		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
 		
+		
+		HistoricalData dividendData = new HistoricalData();
+		dividendData = ReaderCSV.readFromCSV("sp500_dividends.csv");
+		
 		String startDateString = "2017-01-01";
 		String endDateString = "2017-05-30";
 		Double additionalInvestment = 1000.0;
 		int numDaysBetweenInvestment = 31;
+		String currency = "USD";
+		Boolean reinvest = false;
+		Double commission = 0.0;
+		Double dividendTax = 0.0;
 		
-		Calculation myCalc = new Calculation();
+		Calculation myCalc = new Calculation(priceData, dividendData, null);
 		HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
 		
-		calcResult = myCalc.calculateDollarCostAveraging(priceData, null, startDateString, endDateString, additionalInvestment, numDaysBetweenInvestment);
+		calcResult = myCalc.calculateDollarCostAveraging (startDateString, endDateString, additionalInvestment, currency, numDaysBetweenInvestment, reinvest, commission, dividendTax);
 		
 	
 		Date testDate1 = Util.parseDate("2017-05-15");
@@ -36,6 +44,16 @@ class CalculationTest {
 		assertEquals(Math.round(5108.262287), Math.round(calcResult.get(testDate1)));
 		assertEquals(Math.round(5108.262287), Math.round(calcResult.get(testDate2)));
 	
+		
+		//check the same pattern with dividends reinvested 
+		reinvest = true;
+		calcResult = myCalc.calculateDollarCostAveraging (startDateString, endDateString, additionalInvestment, currency, numDaysBetweenInvestment, reinvest, commission, dividendTax);
+		assertEquals(Math.round(5315.645241), Math.round(calcResult.get(testDate2)));
+		
+		//check commission
+		
+		//check taxes 
+		
 	}
 
 	@Test
@@ -52,11 +70,16 @@ class CalculationTest {
 		String endDateString = "2017-02-01";
 		Double additionalInvestment = 2100.0;
 		int numDaysBetweenInvestment = 155;
+		String currency = "USD";
+		Boolean reinvest = false;
+		Double commission = 0.0;
+		Double dividendTax = 0.0;
 		
-		Calculation myCalc = new Calculation();
+		Calculation myCalc = new Calculation(priceData, null, null);
 		HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
 		
-		calcResult = myCalc.calculateDollarCostAveraging(priceData, null, startDateString, endDateString, additionalInvestment, numDaysBetweenInvestment);
+		calcResult = myCalc.calculateDollarCostAveraging (startDateString, endDateString, additionalInvestment, currency, numDaysBetweenInvestment, reinvest, commission, dividendTax);
+		
 		
 	
 		Date testDate1 = Util.parseDate("2017-01-01");

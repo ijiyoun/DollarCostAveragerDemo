@@ -11,11 +11,17 @@ import java.util.Date;
  */
 public class Portfolio {
 
+	private ArrayList<PortfolioAsset> portfolio;  
+	private Double cashBalance;
+	
+	
+public Portfolio () {
 	ArrayList<PortfolioAsset> portfolio = new ArrayList <PortfolioAsset> ();
-	Double cashBalance;
+	this.portfolio = portfolio;
+	cashBalance = 0.0;
+}
 	
 	
-
 /**
  * adds a new asset to the portfolio
  * @param ticker
@@ -40,7 +46,7 @@ public class Portfolio {
 	 */
 	public Double updateAndReturnTotalValue (Date date, HistoricalData data) {
 		
-		Double total = 0.0;
+		Double total = cashBalance;
 		
 		for (PortfolioAsset asset : portfolio) {
 			
@@ -63,5 +69,33 @@ public class Portfolio {
 		return null;
 	}
 	
+	public Double getCashBalance() {
+		return cashBalance;
+	}
+
+/**
+ * add cash to the balance
+ * @param cash
+ */
+	public void addCashBalance(Double cash) {
+		cashBalance = cashBalance + cash;
+	}
 	
+	/**
+	 * withdraw cash from the balance
+	 * @param cash
+	 * @return false if not enough cash
+	 */
+	
+	public boolean withdrawCashBalance(Double cash) {
+		
+		if (cashBalance - cash >= 0) {
+			cashBalance = cashBalance - cash;
+			return true;
+		} else {
+			return false;
+		}
+		
+		
+	}
 }
