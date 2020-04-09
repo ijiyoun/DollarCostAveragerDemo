@@ -77,6 +77,7 @@ public class Controller implements Initializable{
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("FXML Load Complete");
 		drawHistoricalViewChart();
+		initializeDCAViewChart();
 		//disable the button if not all the inputs are made. 
 		
 		
@@ -167,7 +168,7 @@ public class Controller implements Initializable{
 	public void drawHistoricalViewChart() {
 		HistoricalData priceData = new HistoricalData();
 		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
-		Date startDateForHistoricalView = Util.parseDate("1871-01-01");
+		Date startDateForHistoricalView = Util.parseDate("1881-01-01");
 		priceData.pullClosestDataInstance(startDateForHistoricalView);
 		
 		
@@ -218,7 +219,37 @@ public class Controller implements Initializable{
 		System.out.println("Saved the data into DCAseries.");
 		
 		
-		DCAseries.setName("Original Return");
+		DCAseries.setName("Dollar Cost Averager");
+		
+		//to add the series into the line chart
+		DCAViewChart.getData().add(DCAseries);
+		DCAViewChart.setCreateSymbols(false);
+	}
+	
+	/**
+	 * Method to initialize the DCA values from the DollarCostAveraging method. 
+	 */
+	public void initializeDCAViewChart() {
+		System.out.println("drawDCAViewChart is activated. ");
+		
+		DollarCostAveraging dca = new DollarCostAveraging();
+		dca.run("AMZN", "USD", "USD", "2010-01-01", "2015-01-01", 1000.0, 100.0, 3.1);
+		calResult = dca.calcResult;
+		calResultSorted.putAll(calResult);
+		
+		DCAseries = new XYChart.Series<String, Double> ();
+		
+		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
+		int i = 1;
+		for (Date key : calResultSorted.keySet()) {
+			DCAseries.getData().add(new XYChart.Data<String, Double>(formatter.format(key), calResultSorted.get(key)));
+		}
+		System.out.println("Saved the data into DCAseries.");
+		
+		
+		DCAseries.setName("Dollar Cost Averager");
 		
 		//to add the series into the line chart
 		DCAViewChart.getData().add(DCAseries);

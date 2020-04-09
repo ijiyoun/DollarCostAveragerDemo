@@ -77,13 +77,13 @@
             <VBox prefHeight="408.0" prefWidth="145.0" HBox.hgrow="NEVER">
                <children>
                   <TextField fx:id="tickerInput" prefWidth="151.0" promptText="AMZN" />
-                  <TextField fx:id="investmentInput" promptText="0" />
+                  <TextField fx:id="investmentInput" promptText="1000" />
                   <ChoiceBox fx:id="investmentCurrencyBox" prefWidth="150.0" />
                   <DatePicker fx:id="startDate" />
                   <DatePicker fx:id="endDate" />
-                  <TextField fx:id="transactionCostInput" promptText="0" />
+                  <TextField fx:id="transactionCostInput" promptText="100" />
                   <ChoiceBox fx:id="transactionCurrencyBox" prefWidth="150.0" />
-                  <TextField fx:id="taxRateInput" promptText="0.0" />
+                  <TextField fx:id="taxRateInput" promptText="3.1" />
                   <Region prefHeight="23.0" prefWidth="145.0" />
                   <Button fx:id="runButton" mnemonicParsing="false" onAction="#clickedRunButton" text="Run" textAlignment="RIGHT">
                      <VBox.margin>
