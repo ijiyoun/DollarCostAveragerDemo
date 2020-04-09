@@ -3,6 +3,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Stores all historical data
@@ -22,10 +23,10 @@ public class HistoricalData {
 
 	}
 
-/**
- * adds each new HistoricalDataInstance to the ArrayList
- * @param newEntry
- */
+	/**
+	 * adds each new HistoricalDataInstance to the ArrayList
+	 * @param newEntry
+	 */
 	public void addNewEntry (HistoricalDataInstance newEntry) {
 
 		data.add(newEntry);
@@ -48,7 +49,7 @@ public class HistoricalData {
 
 		int i = 0;
 
-	
+
 		if (date.compareTo(data.get(i).getDate()) == 0) { //if statement for the data point
 			dataInstance = data.get(i);
 		} else {
@@ -69,12 +70,50 @@ public class HistoricalData {
 		return dataInstance;
 	}
 
-/**
- * Gets main ArrayList 
- * @return data
- */
+	/**
+	 * returns true if HistoricalDataInstance with certain date exists
+	 * @param date
+	 * @return
+	 */
+
+	public boolean exist (Date date) {
+
+		boolean exist = false;
+
+		for (HistoricalDataInstance currentInstance : data) {
+			if (date.equals(currentInstance.getDate())) {
+				exist = true;
+			}
+
+		}
+
+		return exist;
+	}
+
+
+	/**
+	 * returns main ArrayList 
+	 * @return data
+	 */
 	public ArrayList<HistoricalDataInstance> getData() {
 		return data;
 	}
+
+	/**
+	 * returns HashMap of the HistoricalData
+	 * @return
+	 */
+	public HashMap<Date, Double> returnHashMap () {
+
+		HashMap<Date, Double> allData = new HashMap <Date, Double>();
+
+		for (HistoricalDataInstance currentInstance : data) {
+			allData.put(currentInstance.getDate(), currentInstance.getValue());
+
+		}
+		return allData;
+	}
+
+
 
 }
