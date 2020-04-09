@@ -96,6 +96,22 @@ public Portfolio () {
 			return false;
 		}
 		
-		
 	}
+	/**
+	 * returns total quantity of assets by ticker
+	 * @param ticker
+	 * @return
+	 */
+	
+	public Double getTotalQuantityByTicker (String ticker) {
+		
+		Double total = 0.0;
+		
+		for (PortfolioAsset portfolioAsset : portfolio) {
+			total = total + portfolioAsset.getQuantity();
+		}
+	return total;
+	}
+	
+	
 }

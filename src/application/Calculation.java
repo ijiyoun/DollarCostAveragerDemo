@@ -58,6 +58,22 @@ public class Calculation {
 		while (loopDate.compareTo(endDate) <= 0) {
 
 
+
+			//add dividends if they are distributed on this day
+			if (dividendData.exist(loopDate) && reinvest) {
+				Double totalQuantity = myPortfolio.getTotalQuantityByTicker("");
+				Double dividends = totalQuantity * dividendData.pullClosestDataInstance(loopDate).getValue() * (1 - dividendTax); //after tax
+				myPortfolio.addCashBalance(dividends);
+				System.out.println("divid "+dividends + " div rate "+dividendData.pullClosestDataInstance(loopDate).getValue());
+
+			}
+
+
+
+
+
+
+
 			//add incremental cash if equals next investment date
 			if (loopDate.equals(nextDateToAddCash)) {
 
@@ -79,24 +95,19 @@ public class Calculation {
 			Double currentCashBalance = myPortfolio.getCashBalance();
 
 			if (currentCashBalance > commission) {
-				if (myPortfolio.withdrawCashBalance(currentCashBalance)) {
-					myPortfolio.buyAssetByAmount("", additionalInvestment, loopDate, priceData.pullClosestDataInstance(loopDate).getValue());
+				if (myPortfolio.withdrawCashBalance(currentCashBalance)) { //returns true and withdraws if cash is available
+					myPortfolio.buyAssetByAmount("", currentCashBalance - commission, loopDate, priceData.pullClosestDataInstance(loopDate).getValue());
 				}
 			}
 
 
-			//add dividends if they are distributed on this day
-			if (dividendData.exist(loopDate)) {
-
-
-			}
 
 			//calculate total value and add to the output HashMpap
 			Double totalValue = myPortfolio.updateAndReturnTotalValue(loopDate, priceData);	
 			calcResult.put(loopDate, totalValue);
 
 
-		//	System.out.println(loopDate + " cashbalance " + myPortfolio.getCashBalance() + " currentvalue " + totalValue);
+			System.out.println(loopDate + " cashbalance " + myPortfolio.getCashBalance() + " currentvalue " + totalValue + " quantity total "+myPortfolio.getTotalQuantityByTicker(""));
 
 			//+1 day to the loopDate counter 
 			Calendar c = Calendar.getInstance();
@@ -106,8 +117,8 @@ public class Calculation {
 
 
 
-			
-			
+
+
 
 
 
@@ -115,8 +126,7 @@ public class Calculation {
 
 		}
 
-		String ddd = "2017-1-1";
-		System.out.println(priceData.returnHashMap().get(Util.parseDate(ddd)));
+
 		return calcResult;
 
 	}
