@@ -119,6 +119,7 @@ public class HistoricalData {
 	
 	/**
 	 * Returns HashMap of the HistoricalData based on start and end dates
+	 * TODO: Will add Ticker later on. 
 	 */
 	public HashMap<Date, Double> returnHashMap (String startDateString, String endDateString) {
 		

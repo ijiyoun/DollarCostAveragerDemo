@@ -3,6 +3,7 @@
 .chart-series-line {-fx-stroke-width: 1px;}
 
 .root{
+	-fx-background-color: #F8F8F8;
 
 }
 .button{
