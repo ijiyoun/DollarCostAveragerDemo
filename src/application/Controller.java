@@ -51,6 +51,7 @@ public class Controller implements Initializable{
 	HashMap<Date, Double>calResult = new HashMap<Date,Double>();
 	TreeMap<Date, Double> calResultSorted = new TreeMap<Date, Double>();
 	HashMap<Date, Double> historicalResult = new HashMap <Date, Double>();
+	TreeMap<Date, Double> historicalResultSorted = new TreeMap<Date, Double>();
 	
 	
 	
@@ -167,8 +168,11 @@ public class Controller implements Initializable{
 		HistoricalData priceData = new HistoricalData();
 		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
 		Date startDateForHistoricalView = Util.parseDate("1871-01-01");
+		priceData.pullClosestDataInstance(startDateForHistoricalView);
+		
 		
 		historicalResult = priceData.returnHashMap();
+		historicalResultSorted.putAll(historicalResult);
 		
 		series = new XYChart.Series<String, Double> ();
 		
@@ -176,8 +180,8 @@ public class Controller implements Initializable{
 		
 		
 		int i = 1;
-		for (Date key : historicalResult.keySet()) {
-			series.getData().add(new XYChart.Data<String, Double>(formatter.format(key), historicalResult.get(key)));
+		for (Date key : historicalResultSorted.keySet()) {
+			series.getData().add(new XYChart.Data<String, Double>(formatter.format(key), historicalResultSorted.get(key)));
 		}
 		System.out.println("Saved the data into series.");
 		
