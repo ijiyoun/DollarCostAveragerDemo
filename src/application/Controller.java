@@ -50,13 +50,14 @@ public class Controller implements Initializable{
 	Double taxRate = 0.0;
 	HashMap<Date, Double>calResult = new HashMap<Date,Double>();
 	TreeMap<Date, Double> calResultSorted = new TreeMap<Date, Double>();
+	HashMap<Date, Double> historicalResult = new HashMap <Date, Double>();
 	
 	
 	
 	
 	@FXML private TextField tickerInput;
-	@FXML private LineChart<String, Integer>historicViewChart; // need to define X,Y
-	XYChart.Series<String, Integer> series = null; //need to generate line
+	@FXML private LineChart<String, Double>historicViewChart; // need to define X,Y
+	Series<String, Double> series = null; //need to generate line
 	@FXML private LineChart<String, Double>DCAViewChart;
 	Series<String, Double> DCAseries = null;
 	
@@ -163,33 +164,31 @@ public class Controller implements Initializable{
 	 * On-going. Current state is only inputs of default values. 
 	 */
 	public void drawHistoricalViewChart() {
-		series = new XYChart.Series<String, Integer> ();
 		HistoricalData priceData = new HistoricalData();
 		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
 		Date startDateForHistoricalView = Util.parseDate("1871-01-01");
 		
+		historicalResult = priceData.returnHashMap();
 		
-		priceData.getData();
+		series = new XYChart.Series<String, Double> ();
 		
-		priceData.pullClosestDataInstance(startDateForHistoricalView).getValue();
-		System.out.println(priceData.pullClosestDataInstance(startDateForHistoricalView).getValue());
+		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
 		
-		/*
-		HistoricalData priceData = new HistoricalData();
-		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
-		Date startDateForHistoricalGraph = Util.parseDate(startDates);
-				
-		System.out.println(priceData.pullClosestDataInstance(startDateForHistoricalGraph).getValue());
-		*/
-		series.getData().add(new XYChart.Data<String, Integer>("1",2));
-		series.getData().add(new XYChart.Data<String, Integer>("2",1));
-		series.getData().add(new XYChart.Data<String, Integer>("3",5));
-		series.getData().add(new XYChart.Data<String, Integer>("4",2));
 		
-		series.setName("Original Return");
+		int i = 1;
+		for (Date key : historicalResult.keySet()) {
+			series.getData().add(new XYChart.Data<String, Double>(formatter.format(key), historicalResult.get(key)));
+		}
+		System.out.println("Saved the data into series.");
+		
+		
+		
+		
+		series.setName("Historic Return");
 		
 		//to add the series into the line chart
 		historicViewChart.getData().add(series);
+		historicViewChart.setCreateSymbols(false);
 	}
 	
 	/**
@@ -222,22 +221,6 @@ public class Controller implements Initializable{
 		DCAViewChart.setCreateSymbols(false);
 	}
 	
-	/**
-	 * Method to create multichart in the historicalview. 
-	 */
-	public void multiChart() {
-		/*lineChart.getData().clear(); //to delete the currnet line.*/
-		
-		series = new XYChart.Series<String, Integer>();
-		series.getData().add(new XYChart.Data<String, Integer>("1",3));
-		series.getData().add(new XYChart.Data<String, Integer>("2",3));
-		series.getData().add(new XYChart.Data<String, Integer>("3",3));
-		series.getData().add(new XYChart.Data<String, Integer>("4",3));
-		series.setName("DollarCostAverage Return");
-		
-		historicViewChart.getData().add(series);
-		
-		System.out.println("this it to generate another line. ");
-	}
+
 	
 }
