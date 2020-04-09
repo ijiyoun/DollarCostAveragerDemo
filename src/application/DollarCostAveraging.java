@@ -55,15 +55,15 @@ public class DollarCostAveraging {
 		
 		System.out.println(ticker + investmentCurrency + transactionCurrency + startDates + endDates + investment + transactionCost + taxRate);
 		int numDaysBetweenInvestment = 30;
-		
+		boolean reinvest = false;
 		
 		
 		//COMMENT: is it better to have a separate method to return the values? 
-		Calculation myCalc = new Calculation();
+		Calculation myCalc = new Calculation(priceData, dividendData, null);
 		
 		//HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
 		calcResult = new HashMap<Date, Double>();
-		calcResult = myCalc.calculateDollarCostAveraging(priceData, null, startDateString, endDateString, additionalInvestment, numDaysBetweenInvestment);
+		calcResult = myCalc.calculateDollarCostAveraging(startDateString, endDateString, additionalInvestment, transactionCurrency, numDaysBetweenInvestment, reinvest, transactionCost, taxRate);;
 		
 	
 		//show results in order by date
