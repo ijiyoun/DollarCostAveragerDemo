@@ -172,7 +172,7 @@ public class Controller implements Initializable{
 		priceData.pullClosestDataInstance(startDateForHistoricalView);
 		
 		
-		historicalResult = priceData.returnHashMap();
+		historicalResult = priceData.returnHashMap("2010-01-01", "2015-01-01");
 		historicalResultSorted.putAll(historicalResult);
 		
 		series = new XYChart.Series<String, Double> ();

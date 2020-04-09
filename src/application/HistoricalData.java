@@ -115,6 +115,28 @@ public class HistoricalData {
 		}
 		return allData;
 	}
+	
+	
+	/**
+	 * Returns HashMap of the HistoricalData based on start and end dates
+	 */
+	public HashMap<Date, Double> returnHashMap (String startDateString, String endDateString) {
+		
+		Date startDate = Util.parseDate(startDateString);
+		Date endDate = Util.parseDate(endDateString);
+		
+		
+		HashMap<Date, Double> allData = new HashMap <Date, Double> ();
+		
+		for (HistoricalDataInstance currentInstance : data) {
+			if (startDate.before(currentInstance.getDate()) && endDate.after(currentInstance.getDate())) {
+				allData.put(currentInstance.getDate(), currentInstance.getValue());
+			}
+		}
+		
+		return allData;	
+	}
+
 
 
 
