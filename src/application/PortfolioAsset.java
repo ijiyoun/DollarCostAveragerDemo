@@ -16,6 +16,7 @@ public class PortfolioAsset {
 	private Double purchaseValue;
 	private Double currentPrice;
 	private Double currentValue;
+	private Double accumulatedDividend;
 
 	
 	public PortfolioAsset (String ticker, Double quantity, Date purchaseDate, Double purchasePrice) {
@@ -27,7 +28,7 @@ public class PortfolioAsset {
 		//assigning current price and value to ZERO - this will be changed when updateCurrentPriceAndValue method is called
 		currentPrice = 0.0;
 		currentValue = 0.0;
-		
+		accumulatedDividend = 0.0;
 		
 	}
 	
@@ -43,7 +44,22 @@ public class PortfolioAsset {
 		
 		
 	}
-
+/**
+ * updates accumulated dividends
+ * @param dividend
+ */
+	public void addDividends (Double dividend) {
+		accumulatedDividend = accumulatedDividend + dividend * quantity;
+	}
+	
+	/**
+	 * returns accumulated dividend
+	 * @return
+	 */
+	public Double getAccumulatedDividend () {
+		return accumulatedDividend;
+	}
+	
 	/**
 	 * get ticker
 	 * @return

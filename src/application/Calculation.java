@@ -60,7 +60,7 @@ public class Calculation {
 
 
 			//add dividends if they are distributed on this day
-			if (dividendData.exist(loopDate) && reinvest) {
+		/**	if (dividendData.exist(loopDate) && reinvest) {
 				Double totalQuantity = myPortfolio.getTotalQuantityByTicker("");
 				Double dividends = totalQuantity * dividendData.pullClosestDataInstance(loopDate).getValue() * (1 - dividendTax); //after tax
 				myPortfolio.addCashBalance(dividends);
@@ -68,9 +68,17 @@ public class Calculation {
 
 			}
 
+**/
 
+			if (dividendData.exist(loopDate) && reinvest) {
+				
+				Double dividendDistributed = dividendData.pullClosestDataInstance(loopDate).getValue();
+				myPortfolio.addDividends(loopDate, dividendDistributed, dividendTax);
+				
+				
+				
 
-
+			}
 
 
 
@@ -92,12 +100,11 @@ public class Calculation {
 
 
 			//purchase assets if have cash (should have more than commission to buy)
-			Double currentCashBalance = myPortfolio.getCashBalance();
 
-			if (currentCashBalance > commission) {
-				if (myPortfolio.withdrawCashBalance(currentCashBalance)) { //returns true and withdraws if cash is available
-					myPortfolio.buyAssetByAmount("", currentCashBalance - commission, loopDate, priceData.pullClosestDataInstance(loopDate).getValue());
-				}
+			if (myPortfolio.getCashBalance() > commission) {
+
+					myPortfolio.buyAssetByAmount("", myPortfolio.getCashBalance() - commission,commission, loopDate, priceData.pullClosestDataInstance(loopDate).getValue());
+				
 			}
 
 
@@ -107,7 +114,7 @@ public class Calculation {
 			calcResult.put(loopDate, totalValue);
 
 
-			System.out.println(loopDate + " cashbalance " + myPortfolio.getCashBalance() + " currentvalue " + totalValue + " quantity total "+myPortfolio.getTotalQuantityByTicker(""));
+			//System.out.println(loopDate + " cashbalance " + myPortfolio.getCashBalance() + " currentvalue " + totalValue + " quantity total "+myPortfolio.getTotalQuantityByTicker(""));
 
 			//+1 day to the loopDate counter 
 			Calendar c = Calendar.getInstance();
