@@ -59,7 +59,8 @@ public class DollarCostAveraging {
 		
 		
 		//COMMENT: is it better to have a separate method to return the values? 
-		Calculation myCalc = new Calculation(priceData, dividendData, null);
+		Portfolio myPortfolio = new Portfolio();
+		Calculation myCalc = new Calculation(myPortfolio, priceData, dividendData, null);
 		
 		//HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
 		calcResult = new HashMap<Date, Double>();

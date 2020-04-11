@@ -27,7 +27,7 @@ public class Portfolio {
 
 		HashMap<Date, Double> dividendPendingReceival = new HashMap<Date, Double>();
 		this.dividendPendingReceival = dividendPendingReceival;
-		
+
 		cashBalance = 0.0;
 	}
 
@@ -69,53 +69,55 @@ public class Portfolio {
 
 		return total;
 	}
-	
+
 	/**
 	 * adds dividends
 	 * @param date
-	 * @param dividend
+	 * @param dividend 
+	 * @param tax 0.1 for 10% (if > 1 will not add any entries) 
 	 */
 	public void addDividendsToPendingReceival (Date calcDate, HistoricalData dividendData, Double tax) {
 
-		for (PortfolioAsset asset : portfolio) {
-			Double dividendDistributed = dividendData.pullClosestDataInstance(calcDate).getValue();
-			Double dividendAfterTax =  dividendDistributed * (1 - tax) * asset.getQuantity();
-			asset.addDividends(dividendAfterTax); //adding now even if pending receival
-			
-			int daysBetweenCalcAndDividendReceival = 1;
-			Date dividendReceivalDate = Util.calcDate(calcDate, daysBetweenCalcAndDividendReceival); 
-			
-			if (dividendPendingReceival.containsKey(dividendReceivalDate)) {
-				Double currentValue = dividendPendingReceival.get(dividendReceivalDate);
-				dividendPendingReceival.put(dividendReceivalDate, currentValue + dividendAfterTax);
-			//	System.out.println(" dividends triggered " + dividendReceivalDate + " value " + dividendAfterTax);
-			} else {
-				dividendPendingReceival.put(dividendReceivalDate, dividendAfterTax);
-			}
-			
-			
+		if (tax < 1) { //adding this if statement to avoid negative dividends
+			for (PortfolioAsset asset : portfolio) {
+				Double dividendDistributed = dividendData.pullClosestDataInstance(calcDate).getValue();
+				Double dividendAfterTax =  dividendDistributed * (1 - tax) * asset.getQuantity();
+				asset.addDividends(dividendAfterTax); //adding now even if pending receival
 
+				int daysBetweenCalcAndDividendReceival = 1;
+				Date dividendReceivalDate = Util.calcDate(calcDate, daysBetweenCalcAndDividendReceival); 
+
+				if (dividendPendingReceival.containsKey(dividendReceivalDate)) {
+					Double currentValue = dividendPendingReceival.get(dividendReceivalDate);
+					dividendPendingReceival.put(dividendReceivalDate, currentValue + dividendAfterTax);
+					//	System.out.println(" dividends triggered " + dividendReceivalDate + " value " + dividendAfterTax);
+				} else {
+					dividendPendingReceival.put(dividendReceivalDate, dividendAfterTax);
+				}
+
+
+			}
 		}
 	}
-	
+
 	public void cashDividendsPendingReceival (Date date) {
 		for (Date thisDate: dividendPendingReceival.keySet()) {
 			if (date.equals(thisDate)) {
 				addCashBalance(dividendPendingReceival.get(thisDate));
 				dividendPendingReceival.remove(thisDate);
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	public Double getDividendPendingReceivalTotal () {
 		Double total = 0.0;
 		for (Date currentDate : dividendPendingReceival.keySet()) {
 			total = total + dividendPendingReceival.get(currentDate);
-			
+
 		}
-		
+
 		return total;
 	}
 	/**
@@ -124,17 +126,17 @@ public class Portfolio {
 	 */
 	public Double getAccumulatedDividends () {
 		Double total = 0.0;
-		
+
 		for (PortfolioAsset asset : portfolio) {
-			
+
 			total = total + asset.getAccumulatedDividend();
 
 
 		}
 		return total;
 	}
-	
-	
+
+
 	/**
 	 * Returns total dividend return on a given day
 	 * @param date
@@ -202,8 +204,8 @@ public class Portfolio {
 		}
 		return total;
 	}
-	
-	
+
+
 	public ArrayList<PortfolioAsset> getMainArray() {
 		return portfolio;
 	}
