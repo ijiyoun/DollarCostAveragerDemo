@@ -86,12 +86,11 @@ public class Calculation {
 				//add code to exchange incremental investment to USD if needed
 
 				myPortfolio.addCashBalance(additionalInvestment);
+				myPortfolio.addCashFlow(loopDate, additionalInvestment);
 
 				//calculate date for the next investment
-				Calendar c = Calendar.getInstance();
-				c.setTime(loopDate);
-				c.add(Calendar.DATE, numDaysBetweenInvestment); //number of days to add
-				nextDateToAddCash = c.getTime();
+				nextDateToAddCash = Util.calcDate(nextDateToAddCash, numDaysBetweenInvestment);
+				
 			}
 
 
@@ -121,15 +120,9 @@ public class Calculation {
 		//	System.out.println(loopDate + " cashbalance " + myPortfolio.getCashBalance() + " currentvalue " + totalValue + " quantity total "+myPortfolio.getTotalQuantityByTicker("") + "dividends "+myPortfolio.getAccumulatedDividends());
 
 			//+1 day to the loopDate counter 
-			Calendar c = Calendar.getInstance();
-			c.setTime(loopDate);
-			c.add(Calendar.DATE, 1);
-			loopDate = c.getTime();
+			loopDate = Util.calcDate(loopDate, 1);
 
-
-
-
-
+		
 
 
 

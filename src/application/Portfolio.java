@@ -188,7 +188,19 @@ public class Portfolio {
 
 	}
 
-
+/**
+ * function to add incremental investments to HashMap<Date, Double> cashFlow;
+ * @param date
+ * @param cash
+ */
+	public void addCashFlow (Date date, Double cash) {
+		cashFlow.put(date, cash);
+	}
+	
+	public HashMap<Date, Double> getCashFlow () {
+		return cashFlow;
+	}
+	
 	/**
 	 * returns total quantity of assets by ticker
 	 * @param ticker

@@ -59,6 +59,14 @@ class PortfolioTest {
 		assertEquals(90.13,  myPortfolio.getCashBalance());
 	}
 	
+	@Test
+	void testCashFlow() {
+		myPortfolio.addCashFlow(Util.parseDate("2020-04-11"), 1000.0);		
+		assertEquals(1000.0, myPortfolio.getCashFlow().get(Util.parseDate("2020-04-11")));
+		
+	}
+	
+	
 	/**
 	 * test operations related to dividends
 	 */
