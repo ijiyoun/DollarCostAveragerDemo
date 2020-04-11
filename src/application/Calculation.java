@@ -103,7 +103,7 @@ public class Calculation {
 			if (!reinvest) {
 				cashToInvest = cashToInvest - myPortfolio.getAccumulatedDividends() + myPortfolio.getDividendPendingReceivalTotal()	;
 			}
-			System.out.println("--------------------cash to invest "+loopDate + " " + cashToInvest);
+			
 			
 			if (cashToInvest > commission) {
 
@@ -118,7 +118,7 @@ public class Calculation {
 			calcResult.put(loopDate, totalValue);
 
 
-			System.out.println(loopDate + " cashbalance " + myPortfolio.getCashBalance() + " currentvalue " + totalValue + " quantity total "+myPortfolio.getTotalQuantityByTicker("") + "dividends "+myPortfolio.getAccumulatedDividends());
+		//	System.out.println(loopDate + " cashbalance " + myPortfolio.getCashBalance() + " currentvalue " + totalValue + " quantity total "+myPortfolio.getTotalQuantityByTicker("") + "dividends "+myPortfolio.getAccumulatedDividends());
 
 			//+1 day to the loopDate counter 
 			Calendar c = Calendar.getInstance();
