@@ -12,14 +12,16 @@ import java.util.*;
  */
 public class Calculation {
 
+	Portfolio myPortfolio;
 	HistoricalData priceData; 
 	HistoricalData dividendData; 
 	HistoricalData foreignExchangeData;
 
-	public Calculation (HistoricalData priceData, HistoricalData dividendData, HistoricalData foreignExchangeData) {
+	public Calculation (Portfolio myPortfolio, HistoricalData priceData, HistoricalData dividendData, HistoricalData foreignExchangeData) {
 		this.priceData = priceData;
 		this.dividendData = dividendData;
 		this.foreignExchangeData = foreignExchangeData;
+		this.myPortfolio = myPortfolio;
 	}
 
 	/**
@@ -39,8 +41,6 @@ public class Calculation {
 
 		HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
 
-		//initialize portfolio
-		Portfolio myPortfolio = new Portfolio();
 
 
 		//set start/end date for Dollar Cost Averaging
@@ -48,7 +48,8 @@ public class Calculation {
 		Date endDate = Util.parseDate(endDateString);
 		Date loopDate = startDate;
 		Date nextDateToAddCash = startDate;
-
+		
+		
 
 
 
@@ -56,7 +57,6 @@ public class Calculation {
 
 		//loop over investment period from start to end date day by day
 		while (loopDate.compareTo(endDate) <= 0) {
-
 
 
 			//add dividends if they are distributed on this day
@@ -68,14 +68,12 @@ public class Calculation {
 
 			}
 
-**/
-
-			if (dividendData.exist(loopDate) && reinvest) {
+**/			//cash all previously calculated dividends
+			myPortfolio.cashDividendsPendingReceival(loopDate);
+			//add dividends if they are distributed on this day			
+			if (dividendData.exist(loopDate)) {
 				
-				Double dividendDistributed = dividendData.pullClosestDataInstance(loopDate).getValue();
-				myPortfolio.addDividends(loopDate, dividendDistributed, dividendTax);
-				
-				
+				myPortfolio.addDividendsToPendingReceival(loopDate, dividendData, dividendTax);
 				
 
 			}
@@ -101,9 +99,15 @@ public class Calculation {
 
 			//purchase assets if have cash (should have more than commission to buy)
 
-			if (myPortfolio.getCashBalance() > commission) {
+			Double cashToInvest = myPortfolio.getCashBalance();
+			if (!reinvest) {
+				cashToInvest = cashToInvest - myPortfolio.getAccumulatedDividends() + myPortfolio.getDividendPendingReceivalTotal()	;
+			}
+			System.out.println("--------------------cash to invest "+loopDate + " " + cashToInvest);
+			
+			if (cashToInvest > commission) {
 
-					myPortfolio.buyAssetByAmount("", myPortfolio.getCashBalance() - commission,commission, loopDate, priceData.pullClosestDataInstance(loopDate).getValue());
+					myPortfolio.buyAssetByAmount("", cashToInvest,commission, loopDate, priceData.pullClosestDataInstance(loopDate).getValue());
 				
 			}
 
@@ -114,15 +118,13 @@ public class Calculation {
 			calcResult.put(loopDate, totalValue);
 
 
-			//System.out.println(loopDate + " cashbalance " + myPortfolio.getCashBalance() + " currentvalue " + totalValue + " quantity total "+myPortfolio.getTotalQuantityByTicker(""));
+			System.out.println(loopDate + " cashbalance " + myPortfolio.getCashBalance() + " currentvalue " + totalValue + " quantity total "+myPortfolio.getTotalQuantityByTicker("") + "dividends "+myPortfolio.getAccumulatedDividends());
 
 			//+1 day to the loopDate counter 
 			Calendar c = Calendar.getInstance();
 			c.setTime(loopDate);
 			c.add(Calendar.DATE, 1);
 			loopDate = c.getTime();
-
-
 
 
 
@@ -138,6 +140,9 @@ public class Calculation {
 
 	}
 
+	public Portfolio getPortfolio () {
+		return myPortfolio;
+	}
 
 
 

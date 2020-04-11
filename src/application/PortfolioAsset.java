@@ -16,7 +16,7 @@ public class PortfolioAsset {
 	private Double purchaseValue;
 	private Double currentPrice;
 	private Double currentValue;
-	private Double accumulatedDividend;
+	private Double accumulatedDividend; //including dividends pending receival
 
 	
 	public PortfolioAsset (String ticker, Double quantity, Date purchaseDate, Double purchasePrice) {
@@ -49,7 +49,7 @@ public class PortfolioAsset {
  * @param dividend
  */
 	public void addDividends (Double dividend) {
-		accumulatedDividend = accumulatedDividend + dividend * quantity;
+		accumulatedDividend = accumulatedDividend + dividend;
 	}
 	
 	/**

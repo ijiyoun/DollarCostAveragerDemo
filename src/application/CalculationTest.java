@@ -1,7 +1,7 @@
 package application;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -11,7 +11,8 @@ class CalculationTest {
 
 	Calculation myCalc;
 	HashMap<Date, Double> calcResult;
-	
+	Portfolio myPortfolio;
+
 	//values for tests
 	String startDateString;
 	String endDateString;
@@ -21,30 +22,84 @@ class CalculationTest {
 	Boolean reinvest;
 	Double commission;
 	Double dividendTax;
-	
-public CalculationTest() {
-	HistoricalData priceData = new HistoricalData();
-	priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
-	
-	HistoricalData dividendData = new HistoricalData();
-	dividendData = ReaderCSV.readFromCSV("sp500_dividends.csv");
-	
-	Calculation myCalc = new Calculation(priceData, dividendData, null);
-	this.myCalc = myCalc;
-	
-	HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
-	this.calcResult = calcResult;
-}
-	
-public void executeTest( ) {
-	calcResult = myCalc.calculateDollarCostAveraging (startDateString, endDateString, additionalInvestment, currency, numDaysBetweenInvestment, reinvest, commission, dividendTax);
-}
 
+	public CalculationTest() {
+		HistoricalData priceData = new HistoricalData();
+		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
+
+		HistoricalData dividendData = new HistoricalData();
+		dividendData = ReaderCSV.readFromCSV("sp500_dividends.csv");
+
+		Portfolio myPortfolio = new Portfolio();
+		this.myPortfolio = myPortfolio;
+
+		Calculation myCalc = new Calculation(this.myPortfolio, priceData, dividendData, null);
+		this.myCalc = myCalc;
+
+		HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
+		this.calcResult = calcResult;
+	}
+
+	public void executeTest( ) {
+		calcResult = myCalc.calculateDollarCostAveraging (startDateString, endDateString, additionalInvestment, currency, numDaysBetweenInvestment, reinvest, commission, dividendTax);
+	}
+
+	
+	@Test
+	/**
+	 * test for larger span without dividends
+	 * 
+	 */
+	void test0() {
+
+		startDateString = "2016-05-01";
+		endDateString = "2017-02-05";
+		additionalInvestment = 3000.0;
+		numDaysBetweenInvestment = 31;
+		currency = "USD";
+		reinvest = false;
+		commission = 0.0;
+		dividendTax = 0.0;
+
+		executeTest();
+
+		Date testDate1 = Util.parseDate("2017-01-02");
+		Date testDate2 = Util.parseDate("2017-02-05");
+
+		assertEquals(13.78746524624310, myPortfolio.getTotalQuantityByTicker("total"), 0.00001); //this doesnt include Feb investement scheduled for 2/4
+		assertEquals(27747.747921, calcResult.get(testDate1), 0.00001);
+		assertEquals(35009.483978, calcResult.get(testDate2), 0.00001);
+		//check that size is correct (meaning that scope is strictly limited to FROM startDate TO endDate)
+		assertEquals(281, calcResult.size());
+	}
+
+	void test0withDividendTax() {
+
+		startDateString = "2016-05-01";
+		endDateString = "2017-02-05";
+		additionalInvestment = 3000.0;
+		numDaysBetweenInvestment = 31;
+		currency = "USD";
+		reinvest = false;
+		commission = 0.0;
+		dividendTax = 0.0;
+
+		executeTest();
+
+		Date testDate1 = Util.parseDate("2017-01-02");
+		Date testDate2 = Util.parseDate("2017-02-05");
+
+		assertEquals(13.78746524624310, myPortfolio.getTotalQuantityByTicker("total"), 0.00001); //this doesnt include Feb investement scheduled for 2/4
+		assertEquals(32412.146234, calcResult.get(testDate2), 0.00001);
+		//check that size is correct (meaning that scope is strictly limited to FROM startDate TO endDate)
+		assertEquals(281, calcResult.size());
+	}
+	
 	@Test
 	/**
 	 * test for 5 month investment without dividends
 	 */
-	void testCalculateDollarCostAveragingWithoutDividends() {
+	void testxxx() {
 
 		startDateString = "2017-01-01";
 		endDateString = "2017-05-30";
@@ -54,52 +109,26 @@ public void executeTest( ) {
 		reinvest = false;
 		commission = 0.0;
 		dividendTax = 0.0;
-		
+
 		executeTest();
-		
+
 		Date testDate1 = Util.parseDate("2017-05-15");
 		Date testDate2 = Util.parseDate("2017-05-05");
-		
-		assertEquals(Math.round(5108.262287), Math.round(calcResult.get(testDate1)));
-		assertEquals(Math.round(5108.262287), Math.round(calcResult.get(testDate2)));
-	
+
+		assertEquals(Math.round(5309.595311), Math.round(calcResult.get(testDate1)));
+		assertEquals(Math.round(5309.595311), Math.round(calcResult.get(testDate2)));
+
 	}
 
-	@Test
-	/**
-	 * test for larger span without dividends
-	 * 
-	 */
-	void testCalculateDollarCostAveragingWithoutDividendsDailyPorfolioValue() {
-		
-		startDateString = "2016-05-01";
-		endDateString = "2017-02-01";
-		additionalInvestment = 2100.0;
-		numDaysBetweenInvestment = 155;
-		currency = "USD";
-		reinvest = false;
-		commission = 0.0;
-		dividendTax = 0.0;
-			
-		executeTest();
 	
-		Date testDate1 = Util.parseDate("2017-01-01");
-		Date testDate2 = Util.parseDate("2017-02-01");
-	
-		
-		assertEquals(Math.round(4542.513447), Math.round(calcResult.get(testDate1)));
-		assertEquals(Math.round(4651.907374), Math.round(calcResult.get(testDate2)));
-		//check that size is correct (meaning that scope is strictly limited to FROM startDate TO endDate)
-		assertEquals(277, calcResult.size());
-	}
-	
-	
+
+
 	@Test
 	/**
 	 * test for 5 month investment without dividends
 	 */
 	void WithDividends() {
-		
+
 		startDateString = "2017-01-01";
 		endDateString = "2017-05-30";
 		additionalInvestment = 1000.0;
@@ -108,41 +137,90 @@ public void executeTest( ) {
 		reinvest = true;
 		commission = 0.0;
 		dividendTax = 0.0;		
-	
+
 		executeTest();
-		
+
 		Date testDate1 = Util.parseDate("2017-05-05");
-		
+
 		assertEquals(Math.round(5315.645241), Math.round(calcResult.get(testDate1)));
-		
-	
+
+
 	}
-	
+
 	@Test
 	/**
 	 * test for 5 month investment with dividends tax and commission
 	 */
-	void WithDividendsTaxAndCommission() {
+	void test2WithReinvestmentDividendsTaxAndCommission() {
 
-				
-		String startDateString = "2017-01-01";
-		String endDateString = "2017-05-30";
-		Double additionalInvestment = 1000.0;
-		int numDaysBetweenInvestment = 31;
-		String currency = "USD";
-		Boolean reinvest = true;
-		Double commission = 1.0;
-		Double dividendTax = 0.1;
-			
-		Date testDate1 = Util.parseDate("2017-05-15");
-		Date testDate2 = Util.parseDate("2017-05-05");
-		
-		calcResult = myCalc.calculateDollarCostAveraging (startDateString, endDateString, additionalInvestment, currency, numDaysBetweenInvestment, reinvest, commission, dividendTax);
-		assertEquals(Math.round(5286.00012), Math.round(calcResult.get(testDate2)));
-		
+		startDateString = "2016-05-01";
+		endDateString = "2016-07-02";
+		additionalInvestment = 15000.0;
+		numDaysBetweenInvestment = 31;
+		currency = "USD";
+		reinvest = true;
+		commission = 1.5;
+		dividendTax = 0.1;
+
+		executeTest();
+
+		Date testDate1 = Util.parseDate("2016-07-02");
+		Date testDate2 = Util.parseDate("2016-07-01");
+		Date testDate3 = Util.parseDate("2016-05-01");
+		Date testDate4 = Util.parseDate("2016-06-15");
+
+		assertEquals(46953.2895006988, calcResult.get(testDate1), 0.00001); 
+		assertEquals(31368.1959165823, calcResult.get(testDate2), 0.00001);
+		assertEquals(14998.5000000000, calcResult.get(testDate3), 0.00001);
+		assertEquals(30419.22369, calcResult.get(testDate4), 0.00001);
+
+		//check that stocks were bought only 4 times
+		assertEquals(4, myPortfolio.getMainArray().size());
+
+	}
+
+
+
+	@Test
+	/**
+	 * test for 5 month investment without dividends
+	 */
+	void testShortWithDividends() {
+
+		startDateString = "2017-01-01";
+		endDateString = "2017-02-03";
+		additionalInvestment = 1000.0;
+		numDaysBetweenInvestment = 31;
+		currency = "USD";
+		reinvest = false;
+		commission = 0.0;
+		dividendTax = 0.0;
+
+		executeTest();
+		Date testDate1 = Util.parseDate("2017-02-03");
+		assertEquals(2044.366891, calcResult.get(testDate1), 0.00001);
+
+
+	}
 	
+	
+	
+	@Test
+
+	void testThatStocksArePurchasedOnBothStartAndEndDateInclusive() {
+
+		startDateString = "2017-01-01";
+		endDateString = "2017-02-01";
+		additionalInvestment = 1000.0;
+		numDaysBetweenInvestment = 31;
+		currency = "USD";
+		reinvest = false;
+		commission = 0.0;
+		dividendTax = 0.0;
+
+		executeTest();
+		assertEquals(0.868738383, myPortfolio.getTotalQuantityByTicker("test"), 0.0001);
+
+
 	}
 }
-
-
-

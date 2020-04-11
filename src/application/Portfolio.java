@@ -14,6 +14,7 @@ public class Portfolio {
 
 	private ArrayList<PortfolioAsset> portfolio;  
 	private HashMap<Date, Double> cashFlow;
+	private HashMap<Date, Double> dividendPendingReceival;
 	private Double cashBalance;
 
 
@@ -24,6 +25,9 @@ public class Portfolio {
 		HashMap<Date, Double> cashFlow = new HashMap<Date, Double>();
 		this.cashFlow = cashFlow;
 
+		HashMap<Date, Double> dividendPendingReceival = new HashMap<Date, Double>();
+		this.dividendPendingReceival = dividendPendingReceival;
+		
 		cashBalance = 0.0;
 	}
 
@@ -36,12 +40,12 @@ public class Portfolio {
 	 */
 	public void buyAssetByAmount (String ticker, Double investmentAmount, Double commission, Date purchaseDate, Double purchasePrice) {
 
-		if (cashBalance >= investmentAmount + commission) {
-			Double quantity = investmentAmount / purchasePrice;
+		if (cashBalance >= investmentAmount) {
+			Double quantity = (investmentAmount - commission) / purchasePrice;
 			PortfolioAsset newAssetToBuy = new PortfolioAsset(ticker, quantity, purchaseDate, purchasePrice);
 
 			portfolio.add(newAssetToBuy);
-			withdrawCashBalance(investmentAmount + commission);
+			withdrawCashBalance(investmentAmount);
 		}
 	}
 
@@ -52,13 +56,13 @@ public class Portfolio {
 	 * @param date
 	 * @return
 	 */
-	public Double updateAndReturnTotalValue (Date date, HistoricalData data) {
+	public Double updateAndReturnTotalValue (Date date, HistoricalData priceData) {
 
 		Double total = cashBalance;
 
 		for (PortfolioAsset asset : portfolio) {
 
-			asset.updateCurrentPriceAndValue(data.pullClosestDataInstance(date).getValue());
+			asset.updateCurrentPriceAndValue(priceData.pullClosestDataInstance(date).getValue());
 			total = total + asset.getCurrentValue();
 
 		}
@@ -71,15 +75,48 @@ public class Portfolio {
 	 * @param date
 	 * @param dividend
 	 */
-	public void addDividends (Date date, Double dividend, Double tax) {
+	public void addDividendsToPendingReceival (Date calcDate, HistoricalData dividendData, Double tax) {
 
 		for (PortfolioAsset asset : portfolio) {
-
-			Double dividendAfterTax =  dividend * (1 - tax) * asset.getQuantity();
-			asset.addDividends(dividendAfterTax);
-			addCashBalance(dividendAfterTax);
+			Double dividendDistributed = dividendData.pullClosestDataInstance(calcDate).getValue();
+			Double dividendAfterTax =  dividendDistributed * (1 - tax) * asset.getQuantity();
+			asset.addDividends(dividendAfterTax); //adding now even if pending receival
+			
+			int daysBetweenCalcAndDividendReceival = 1;
+			Date dividendReceivalDate = Util.calcDate(calcDate, daysBetweenCalcAndDividendReceival); 
+			
+			if (dividendPendingReceival.containsKey(dividendReceivalDate)) {
+				Double currentValue = dividendPendingReceival.get(dividendReceivalDate);
+				dividendPendingReceival.put(dividendReceivalDate, currentValue + dividendAfterTax);
+			//	System.out.println(" dividends triggered " + dividendReceivalDate + " value " + dividendAfterTax);
+			} else {
+				dividendPendingReceival.put(dividendReceivalDate, dividendAfterTax);
+			}
+			
+			
 
 		}
+	}
+	
+	public void cashDividendsPendingReceival (Date date) {
+		for (Date thisDate: dividendPendingReceival.keySet()) {
+			if (date.equals(thisDate)) {
+				addCashBalance(dividendPendingReceival.get(thisDate));
+				dividendPendingReceival.remove(thisDate);
+			}
+			
+		}
+		
+	}
+	
+	public Double getDividendPendingReceivalTotal () {
+		Double total = 0.0;
+		for (Date currentDate : dividendPendingReceival.keySet()) {
+			total = total + dividendPendingReceival.get(currentDate);
+			
+		}
+		
+		return total;
 	}
 	/**
 	 * returns total accumulated dividends
@@ -164,6 +201,11 @@ public class Portfolio {
 			total = total + portfolioAsset.getQuantity();
 		}
 		return total;
+	}
+	
+	
+	public ArrayList<PortfolioAsset> getMainArray() {
+		return portfolio;
 	}
 
 
