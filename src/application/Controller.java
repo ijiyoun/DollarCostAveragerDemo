@@ -83,10 +83,12 @@ public class Controller implements Initializable{
 		initializeDCAViewChart();
 		//disable the button if not all the inputs are made. 
 		
+		//disenable user inputs for datepicker
+		startDate.getEditor().setEditable(false);
+		endDate.getEditor().setEditable(false);
 		
+		startDate.getEditor().setDisable(true);
 		//set the initial values of currencyBox. 
-//		investmentCurrencyBox.setValue("USD");
-//		investmentCurrencyBox.setItems(chooseCurrencyList);
 		transactionCurrencyBox.setItems(chooseCurrencyList);
 		investmentCurrencyBox.setItems(chooseCurrencyList);
 		
@@ -110,8 +112,6 @@ public class Controller implements Initializable{
 			);
 		
 		DollarCostAveraging dca = new DollarCostAveraging();
-		
-		
 		
 
 	}
@@ -330,6 +330,7 @@ public class Controller implements Initializable{
 		DCAViewChart.setCreateSymbols(false);
 		drawCashFlowChart(cashFlowResultSorted);
 	}
+	
 	
 
 	
