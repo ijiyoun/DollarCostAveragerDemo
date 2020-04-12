@@ -29,6 +29,7 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 
 /***
  * Class to save user inputs and communicate with back end methods and show the graphs. 
@@ -73,6 +74,9 @@ public class Controller implements Initializable{
 	@FXML private ChoiceBox transactionCurrencyBox;
 	@FXML private TextField taxRateInput;
 	@FXML private Button runButton;
+	@FXML private Text totalCashInvested;
+	@FXML private Text growthRate;
+	@FXML private Text totalDividend;
 	
 	
 	
@@ -83,10 +87,12 @@ public class Controller implements Initializable{
 		initializeDCAViewChart();
 		//disable the button if not all the inputs are made. 
 		
+		//disenable user inputs for datepicker
+		startDate.getEditor().setEditable(false);
+		endDate.getEditor().setEditable(false);
 		
+		//startDate.getEditor().setDisable(true);
 		//set the initial values of currencyBox. 
-//		investmentCurrencyBox.setValue("USD");
-//		investmentCurrencyBox.setItems(chooseCurrencyList);
 		transactionCurrencyBox.setItems(chooseCurrencyList);
 		investmentCurrencyBox.setItems(chooseCurrencyList);
 		
@@ -110,8 +116,6 @@ public class Controller implements Initializable{
 			);
 		
 		DollarCostAveraging dca = new DollarCostAveraging();
-		
-		
 		
 
 	}
@@ -151,11 +155,9 @@ public class Controller implements Initializable{
 		System.out.println("Succesfully stored the daata into the variables");
 		
 		//Do smthin with the data
-		
 	
 		//Reflect the result in the chart. 
 		drawDCAViewChart();
-		drawHistoricalViewChart();
 		
 	
 		
@@ -201,18 +203,11 @@ public class Controller implements Initializable{
 	/**
 	 * Draw the Historical View Chart based on user inputs, triggered by Run event. 
 	 */
-	public void drawHistoricalViewChart() {
+	public void drawHistoricalViewChart(HashMap<Date, Double>historicalData) {
 		
 		historicViewChart.getData().clear();	//initialize
 
-		HistoricalData priceData = new HistoricalData();
-		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
-		Date startDateForHistoricalView = Util.parseDate("1881-01-01");
-		//priceData.pullClosestDataInstance(startDateForHistoricalView);
-		
-		
-		historicalResult = priceData.returnHashMap(startDates, endDates);
-		historicalResultSorted.putAll(historicalResult);
+		historicalResultSorted.putAll(historicalData);
 		
 		series = new XYChart.Series<String, Double> ();
 		
@@ -246,6 +241,8 @@ public class Controller implements Initializable{
 		dca.run(ticker, investmentCurrency, transactionCurrency, startDates, endDates, investment, transactionCost, taxRate);
 		cashFlowResult = dca.cashFlow;
 		calResult = dca.calcResult;
+		historicalResult = dca.historicalData; 
+		Double accumulatedDividend = dca.accumulatedDividends;
 		cashFlowResultSorted.putAll(cashFlowResult);
 		calResultSorted.putAll(calResult);
 
@@ -269,6 +266,10 @@ public class Controller implements Initializable{
 		DCAViewChart.setCreateSymbols(false);
 		System.out.println("Saved the data into DCAseries.");
 		drawCashFlowChart(cashFlowResultSorted);
+		drawHistoricalViewChart(historicalResult);
+		
+		//accumulatedDividends
+		totalDividend.setText("TTL Dividend : " + accumulatedDividend.toString());
 		
 		
 		
@@ -311,6 +312,7 @@ public class Controller implements Initializable{
 		calResultSorted.putAll(calResult);
 		
 		
+		
 		DCAseries = new XYChart.Series<String, Double> ();
 		
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -330,6 +332,7 @@ public class Controller implements Initializable{
 		DCAViewChart.setCreateSymbols(false);
 		drawCashFlowChart(cashFlowResultSorted);
 	}
+	
 	
 
 	

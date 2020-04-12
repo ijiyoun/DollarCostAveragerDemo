@@ -30,7 +30,7 @@
    <left>
       <HBox prefHeight="673.0" prefWidth="338.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="903.0" prefWidth="172.0">
+            <VBox prefHeight="910.0" prefWidth="206.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ticker">
                      <VBox.margin>
@@ -82,24 +82,24 @@
                         <Insets bottom="20.0" />
                      </VBox.margin>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="TTL Cash Invested">
+                  <Text fx:id="totalCashInvested" strokeType="OUTSIDE" strokeWidth="0.0" text="TTL Cash Invested : ">
                      <VBox.margin>
                         <Insets bottom="15.0" left="10.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Growth Rate">
+                  <Text fx:id="growthRate" strokeType="OUTSIDE" strokeWidth="0.0" text="Growth Rate : ">
                      <VBox.margin>
                         <Insets bottom="15.0" left="10.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="TTL dividend">
+                  <Text fx:id="totalDividend" strokeType="OUTSIDE" strokeWidth="0.0" text="TTL dividend : ">
                      <VBox.margin>
                         <Insets bottom="15.0" left="10.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Text>
                </children>
             </VBox>
-            <VBox prefHeight="408.0" prefWidth="145.0" HBox.hgrow="NEVER">
+            <VBox prefHeight="910.0" prefWidth="154.0" HBox.hgrow="NEVER">
                <children>
                   <TextField fx:id="tickerInput" prefWidth="151.0" promptText="AMZN">
                      <VBox.margin>
@@ -140,7 +140,6 @@
                      </VBox.margin>
                   </Button>
                   <Region prefHeight="86.0" prefWidth="146.0" />
-                  <TextField editable="false" />
                </children>
             </VBox>
          </children>

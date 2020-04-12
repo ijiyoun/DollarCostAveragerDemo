@@ -19,9 +19,11 @@ public class DollarCostAveraging {
 	Double additionalInvestment;
 	Double transactionCost;
 	Double taxRate;
+	Double accumulatedDividends;
 	
 	public static HashMap<Date, Double>calcResult;
 	public static HashMap<Date, Double>cashFlow;
+	public static HashMap<Date, Double>historicalData;
 
 	/**
 	 * runs dollar cost averaging calculation
@@ -53,6 +55,8 @@ public class DollarCostAveraging {
 		//read FX data
 		//code to be added 
 		
+		//passing historical data hashmap
+		historicalData = priceData.returnHashMap(startDateString, endDateString);
 		
 		System.out.println(ticker + investmentCurrency + transactionCurrency + startDates + endDates + investment + transactionCost + taxRate);
 		int numDaysBetweenInvestment = 30;
@@ -65,10 +69,11 @@ public class DollarCostAveraging {
 		
 		//HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
 		calcResult = new HashMap<Date, Double>();
-		calcResult = myCalc.calculateDollarCostAveraging(startDateString, endDateString, additionalInvestment, transactionCurrency, numDaysBetweenInvestment, reinvest, transactionCost, taxRate);;
+		calcResult = myCalc.calculateDollarCostAveraging(startDateString, endDateString, additionalInvestment, transactionCurrency, numDaysBetweenInvestment, reinvest, transactionCost, taxRate);
 		
 		//to get the cash flow data
 		cashFlow = myCalc.getPortfolio().getCashFlow();
+		accumulatedDividends = myCalc.getPortfolio().getAccumulatedDividends();
 	
 		//show results in order by date
 		for (int i = 0; i < calcResult.size(); i++) {
