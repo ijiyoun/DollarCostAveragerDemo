@@ -208,7 +208,7 @@ public class Controller implements Initializable{
 		HistoricalData priceData = new HistoricalData();
 		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
 		Date startDateForHistoricalView = Util.parseDate("1881-01-01");
-		priceData.pullClosestDataInstance(startDateForHistoricalView);
+		//priceData.pullClosestDataInstance(startDateForHistoricalView);
 		
 		
 		historicalResult = priceData.returnHashMap(startDates, endDates);
@@ -305,8 +305,11 @@ public class Controller implements Initializable{
 		
 		DollarCostAveraging dca = new DollarCostAveraging();
 		dca.run("AMZN", "USD", "USD", "2010-01-01", "2015-01-01", 1000.0, 100.0, 3.1);
+		cashFlowResult = dca.cashFlow;
+		cashFlowResultSorted.putAll(cashFlowResult);
 		calResult = dca.calcResult;
 		calResultSorted.putAll(calResult);
+		
 		
 		DCAseries = new XYChart.Series<String, Double> ();
 		
@@ -325,6 +328,7 @@ public class Controller implements Initializable{
 		//to add the series into the line chart
 		DCAViewChart.getData().add(DCAseries);
 		DCAViewChart.setCreateSymbols(false);
+		drawCashFlowChart(cashFlowResultSorted);
 	}
 	
 
