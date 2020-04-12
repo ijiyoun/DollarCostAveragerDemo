@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class Portfolio {
 
 	private ArrayList<PortfolioAsset> portfolio;  
-	private HashMap<Date, Double> cashFlow;
+	private HashMap<Date, Double> cashFlow; //aggregated
 	private HashMap<Date, Double> dividendPendingReceival;
 	private Double cashBalance;
 

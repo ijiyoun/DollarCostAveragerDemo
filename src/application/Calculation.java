@@ -53,7 +53,7 @@ public class Calculation {
 
 
 
-
+		Double totalInvested = 0.0; //hold aggregated investment amount to pass to Portfolio cashFlow
 
 		//loop over investment period from start to end date day by day
 		while (loopDate.compareTo(endDate) <= 0) {
@@ -86,7 +86,10 @@ public class Calculation {
 				//add code to exchange incremental investment to USD if needed
 
 				myPortfolio.addCashBalance(additionalInvestment);
-				myPortfolio.addCashFlow(loopDate, additionalInvestment);
+				
+				//store aggregated total investment amount
+				totalInvested += additionalInvestment;
+				myPortfolio.addCashFlow(loopDate, totalInvested);
 
 				//calculate date for the next investment
 				nextDateToAddCash = Util.calcDate(nextDateToAddCash, numDaysBetweenInvestment);
