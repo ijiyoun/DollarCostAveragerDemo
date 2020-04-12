@@ -252,6 +252,7 @@ public class Controller implements Initializable{
 		dca.run(ticker, investmentCurrency, transactionCurrency, startDates, endDates, investment, transactionCost, taxRate);
 		calResult = dca.calcResult;
 		calResultSorted.putAll(calResult);
+
 		
 		DCAseries = new XYChart.Series<String, Double> ();
 		
@@ -283,6 +284,7 @@ public class Controller implements Initializable{
 	public void drawCashFlowChart() {
 		
 		Portfolio myPort = new Portfolio();
+		
 
 		Date startDateForCashFlowChart = Util.parseDate(startDates);
 		myPort.addCashFlow(startDateForCashFlowChart, investment);
@@ -291,7 +293,7 @@ public class Controller implements Initializable{
 		
 		cashFlowSeries = new XYChart.Series<String, Double> ();
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-		
+		//Need to check whether this contains data
 		
 		int i = 1;
 		for (Date key : cashFlowResultSorted.keySet()) {
