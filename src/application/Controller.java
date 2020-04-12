@@ -109,6 +109,7 @@ public class Controller implements Initializable{
 			    .or(Bindings.isEmpty(taxRateInput.textProperty()))
 			);
 		
+		DollarCostAveraging dca = new DollarCostAveraging();
 		
 		
 		
@@ -150,25 +151,18 @@ public class Controller implements Initializable{
 		System.out.println("Succesfully stored the daata into the variables");
 		
 		//Do smthin with the data
-		/*
-		DollarCostAveraging dca = new DollarCostAveraging();
-		*/
+		
 	
 		//Reflect the result in the chart. 
 		drawDCAViewChart();
 		drawHistoricalViewChart();
 		
-		
-		
-		
+	
 		
 		
 	}
 	
-	/***
-	 * If the user does not input any value, then prevent the user
-	 */
-	
+
 	
 	/**
 	 * Method to draw the default chart of the historical view. 
@@ -250,7 +244,9 @@ public class Controller implements Initializable{
 		DCAViewChart.getData().clear();		//initialize
 		DollarCostAveraging dca = new DollarCostAveraging();
 		dca.run(ticker, investmentCurrency, transactionCurrency, startDates, endDates, investment, transactionCost, taxRate);
+		cashFlowResult = dca.cashFlow;
 		calResult = dca.calcResult;
+		cashFlowResultSorted.putAll(cashFlowResult);
 		calResultSorted.putAll(calResult);
 
 		
@@ -272,7 +268,7 @@ public class Controller implements Initializable{
 		DCAViewChart.getData().add(DCAseries);
 		DCAViewChart.setCreateSymbols(false);
 		System.out.println("Saved the data into DCAseries.");
-		drawCashFlowChart();
+		drawCashFlowChart(cashFlowResultSorted);
 		
 		
 		
@@ -281,15 +277,7 @@ public class Controller implements Initializable{
 	/***
 	 * Add draw Cash Flow line graph into the DCA view
 	 */
-	public void drawCashFlowChart() {
-		
-		Portfolio myPort = new Portfolio();
-		
-
-		Date startDateForCashFlowChart = Util.parseDate(startDates);
-		myPort.addCashFlow(startDateForCashFlowChart, investment);
-		cashFlowResult = myPort.getCashFlow();
-		cashFlowResultSorted.putAll(cashFlowResult);
+	public void drawCashFlowChart(TreeMap<Date, Double> cashFlowResultSorted) {
 		
 		cashFlowSeries = new XYChart.Series<String, Double> ();
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -298,12 +286,13 @@ public class Controller implements Initializable{
 		int i = 1;
 		for (Date key : cashFlowResultSorted.keySet()) {
 			cashFlowSeries.getData().add(new XYChart.Data<String, Double>(formatter.format(key), cashFlowResultSorted.get(key)));
-			System.out.println(key + " : ");
+			System.out.println(key + " : " + cashFlowResultSorted.get(key));
 		}
 		System.out.println("Saved the data into Cash Flow series.");
 		
 		
 		cashFlowSeries.setName("Cash Flow");
+		DCAViewChart.getData().add(cashFlowSeries);
 
 		
 	}

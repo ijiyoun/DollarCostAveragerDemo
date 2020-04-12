@@ -21,6 +21,7 @@ public class DollarCostAveraging {
 	Double taxRate;
 	
 	public static HashMap<Date, Double>calcResult;
+	public static HashMap<Date, Double>cashFlow;
 
 	/**
 	 * runs dollar cost averaging calculation
@@ -66,6 +67,8 @@ public class DollarCostAveraging {
 		calcResult = new HashMap<Date, Double>();
 		calcResult = myCalc.calculateDollarCostAveraging(startDateString, endDateString, additionalInvestment, transactionCurrency, numDaysBetweenInvestment, reinvest, transactionCost, taxRate);;
 		
+		//to get the cash flow data
+		cashFlow = myCalc.getPortfolio().getCashFlow();
 	
 		//show results in order by date
 		for (int i = 0; i < calcResult.size(); i++) {
