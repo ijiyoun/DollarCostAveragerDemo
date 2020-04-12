@@ -6,7 +6,7 @@ import java.util.Date;
  * @author yayan
  *
  */
-public class HistoricalDataInstance {
+public class HistoricalDataInstance implements Comparable {
 
 	private String ticker;
 	private Date date;
@@ -41,6 +41,14 @@ public class HistoricalDataInstance {
 	 */
 	public Double getValue() {
 		return value;
+	}
+
+	@Override
+	public int compareTo(Object otherInstance) {
+		HistoricalDataInstance myOtherInstance = (HistoricalDataInstance) otherInstance;
+		if (myOtherInstance.getDate().equals(date)) return 0;
+		if (myOtherInstance.getDate().before(date)) return 1;
+		return -1;
 	}
 
 

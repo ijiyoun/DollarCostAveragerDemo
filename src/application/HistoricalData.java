@@ -2,6 +2,7 @@ package application;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -47,21 +48,28 @@ public class HistoricalData {
 
 		HistoricalDataInstance dataInstance = new HistoricalDataInstance(null, null, null);
 
+		
+		Collections.sort(data);
+		
+		
+		
 		int i = 0;
 
 
-		if (date.compareTo(data.get(i).getDate()) == 0) { //if statement for the data point
-			dataInstance = data.get(i);
+		if (date.before(data.get(0).getDate())) { 
+			dataInstance = data.get(0); 
 		} else {
 
-			while ((date.compareTo(data.get(i).getDate()) > 0) && (i < data.size())) {
-
-				if (date.compareTo(data.get(i + 1).getDate()) == 0) { //assign the value if the date matches exactly
-					dataInstance = data.get(i + 1);
-				} else if (date.compareTo(data.get(i + 1).getDate()) < 0) { //assign the closest preview value if the date doesn't match exactly
+			while (date.after(data.get(i).getDate()) && (i < data.size() - 1)) {
+				Date dataDate = data.get(i).getDate();
+				if (date.before(dataDate)) dataInstance = data.get(i);
+				if (date.equals(dataDate)) dataInstance = data.get(i);
+				if (i == data.size() - 1) {
 					dataInstance = data.get(i);
-					//System.out.println(i + "," + dataInstance);
+				} else {
+					if (date.after(dataDate)) dataInstance = data.get(i + 1);
 				}
+				
 				i++; 
 			}
 
