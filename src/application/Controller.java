@@ -52,6 +52,8 @@ public class Controller implements Initializable{
 	TreeMap<Date, Double> calResultSorted = new TreeMap<Date, Double>();
 	HashMap<Date, Double> historicalResult = new HashMap <Date, Double>();
 	TreeMap<Date, Double> historicalResultSorted = new TreeMap<Date, Double>();
+	HashMap<Date, Double> cashFlowResult = new HashMap<Date, Double>();
+	TreeMap<Date, Double> cashFlowResultSorted = new TreeMap<Date, Double>();
 	
 	
 	
@@ -61,6 +63,7 @@ public class Controller implements Initializable{
 	Series<String, Double> series = null; //need to generate line
 	@FXML private LineChart<String, Double>DCAViewChart;
 	Series<String, Double> DCAseries = null;
+	Series<String, Double>cashFlowSeries = null;
 	
 	@FXML private ChoiceBox investmentCurrencyBox;
 	@FXML private DatePicker startDate;
@@ -76,7 +79,7 @@ public class Controller implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("FXML Load Complete");
-		drawHistoricalViewChart();
+		initializeHistoricalViewChart();
 		initializeDCAViewChart();
 		//disable the button if not all the inputs are made. 
 		
@@ -136,6 +139,7 @@ public class Controller implements Initializable{
 	 */
 	public void clickedRunButton() {
 		
+		Calculation myCalc;
 		//Store the data
 		startDates = startDate.getValue().toString();
 		endDates = endDate.getValue().toString();
@@ -146,12 +150,17 @@ public class Controller implements Initializable{
 		System.out.println("Succesfully stored the daata into the variables");
 		
 		//Do smthin with the data
-		
-		
-		
-		
+		/*
+		DollarCostAveraging dca = new DollarCostAveraging();
+		*/
+	
 		//Reflect the result in the chart. 
 		drawDCAViewChart();
+		drawHistoricalViewChart();
+		
+		
+		
+		
 		
 		
 	}
@@ -165,14 +174,50 @@ public class Controller implements Initializable{
 	 * Method to draw the default chart of the historical view. 
 	 * On-going. Current state is only inputs of default values. 
 	 */
+	public void initializeHistoricalViewChart() {
+		HistoricalData priceData = new HistoricalData();
+		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
+		Date startDateForHistoricalView = Util.parseDate("1881-01-01");
+		priceData.pullClosestDataInstance(startDateForHistoricalView);
+		
+		historicalResult = priceData.returnHashMap("2010-01-01", "2015-01-01");
+		historicalResultSorted.putAll(historicalResult);
+		
+		series = new XYChart.Series<String, Double> ();
+		
+		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
+		int i = 1;
+		for (Date key : historicalResultSorted.keySet()) {
+			series.getData().add(new XYChart.Data<String, Double>(formatter.format(key), historicalResultSorted.get(key)));
+		}
+		System.out.println("Saved the data into series.");
+		
+		
+		
+		
+		series.setName("Historic Return");
+		
+		//to add the series into the line chart
+		historicViewChart.getData().add(series);
+		historicViewChart.setCreateSymbols(false);
+	}
+	
+	/**
+	 * Draw the Historical View Chart based on user inputs, triggered by Run event. 
+	 */
 	public void drawHistoricalViewChart() {
+		
+		historicViewChart.getData().clear();	//initialize
+
 		HistoricalData priceData = new HistoricalData();
 		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
 		Date startDateForHistoricalView = Util.parseDate("1881-01-01");
 		priceData.pullClosestDataInstance(startDateForHistoricalView);
 		
 		
-		historicalResult = priceData.returnHashMap("2010-01-01", "2015-01-01");
+		historicalResult = priceData.returnHashMap(startDates, endDates);
 		historicalResultSorted.putAll(historicalResult);
 		
 		series = new XYChart.Series<String, Double> ();
@@ -202,6 +247,7 @@ public class Controller implements Initializable{
 	public void drawDCAViewChart() {
 		System.out.println("drawDCAViewChart is activated. ");
 		
+		DCAViewChart.getData().clear();		//initialize
 		DollarCostAveraging dca = new DollarCostAveraging();
 		dca.run(ticker, investmentCurrency, transactionCurrency, startDates, endDates, investment, transactionCost, taxRate);
 		calResult = dca.calcResult;
@@ -216,7 +262,7 @@ public class Controller implements Initializable{
 		for (Date key : calResultSorted.keySet()) {
 			DCAseries.getData().add(new XYChart.Data<String, Double>(formatter.format(key), calResultSorted.get(key)));
 		}
-		System.out.println("Saved the data into DCAseries.");
+
 		
 		
 		DCAseries.setName("Dollar Cost Averager");
@@ -224,6 +270,40 @@ public class Controller implements Initializable{
 		//to add the series into the line chart
 		DCAViewChart.getData().add(DCAseries);
 		DCAViewChart.setCreateSymbols(false);
+		System.out.println("Saved the data into DCAseries.");
+		drawCashFlowChart();
+		
+		
+		
+	}
+	
+	/***
+	 * Add draw Cash Flow line graph into the DCA view
+	 */
+	public void drawCashFlowChart() {
+		
+		Portfolio myPort = new Portfolio();
+
+		Date startDateForCashFlowChart = Util.parseDate(startDates);
+		myPort.addCashFlow(startDateForCashFlowChart, investment);
+		cashFlowResult = myPort.getCashFlow();
+		cashFlowResultSorted.putAll(cashFlowResult);
+		
+		cashFlowSeries = new XYChart.Series<String, Double> ();
+		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
+		int i = 1;
+		for (Date key : cashFlowResultSorted.keySet()) {
+			cashFlowSeries.getData().add(new XYChart.Data<String, Double>(formatter.format(key), cashFlowResultSorted.get(key)));
+			System.out.println(key + " : ");
+		}
+		System.out.println("Saved the data into Cash Flow series.");
+		
+		
+		cashFlowSeries.setName("Cash Flow");
+
+		
 	}
 	
 	/**
