@@ -187,7 +187,7 @@ public class Controller implements Initializable{
 		
 		//Update the Output text values.
 		totalDividend.setText("TTL Dividend : " + accumulatedDividend.toString()); //TTL Dividend
-		totalCashInvested.setText("TTL Cash Invested : " + dca.totalCashInvested);//Growth Rate
+		totalCashInvested.setText("TTL Cash Invested : " + dca.totalCashInvested + "(" + investmentCurrency + ")");//Growth Rate
 		growthRate.setText("Growth Rate : "); //Profit
 		
 		
