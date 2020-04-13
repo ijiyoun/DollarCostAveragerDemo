@@ -77,6 +77,8 @@ public class Controller implements Initializable{
 	@FXML private Text totalCashInvested;
 	@FXML private Text growthRate;
 	@FXML private Text totalDividend;
+	@FXML private Text dollarCostAveragerTitle;
+	@FXML private Text historicalViewTitle;
 	
 	
 	
@@ -87,7 +89,7 @@ public class Controller implements Initializable{
 		initializeDCAViewChart();
 		//disable the button if not all the inputs are made. 
 		
-		//disenable user inputs for datepicker
+		//disable user inputs for Datepicker
 		startDate.getEditor().setEditable(false);
 		endDate.getEditor().setEditable(false);
 		
@@ -115,7 +117,7 @@ public class Controller implements Initializable{
 			    .or(Bindings.isEmpty(taxRateInput.textProperty()))
 			);
 		
-		DollarCostAveraging dca = new DollarCostAveraging();
+		//DollarCostAveraging dca = new DollarCostAveraging();
 		
 
 	}
@@ -145,7 +147,7 @@ public class Controller implements Initializable{
 	public void clickedRunButton() {
 		
 		Calculation myCalc;
-		//Store the data
+		//Store the input data
 		startDates = startDate.getValue().toString();
 		endDates = endDate.getValue().toString();
 		investmentCurrency = investmentCurrencyBox.getSelectionModel().getSelectedItem().toString();
@@ -154,10 +156,43 @@ public class Controller implements Initializable{
 		taxRate = Double.parseDouble(taxRateInput.getText());
 		System.out.println("Succesfully stored the daata into the variables");
 		
-		//Do smthin with the data
-	
-		//Reflect the result in the chart. 
-		drawDCAViewChart();
+		//Read the values from DollarCostAveraging.java.
+		DollarCostAveraging dca = new DollarCostAveraging();
+		dca.run(ticker, investmentCurrency, transactionCurrency, startDates, endDates, investment, transactionCost, taxRate);
+		cashFlowResult = dca.cashFlow;
+		calResult = dca.calcResult;
+		historicalResult = dca.historicalData; 
+		Double accumulatedDividend = dca.accumulatedDividends;
+		cashFlowResultSorted.putAll(cashFlowResult);
+		historicalResultSorted.putAll(historicalResult);
+		calResultSorted.putAll(calResult);
+		
+		//To show the dates range on the UI
+
+		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
+		historicalViewTitle.setText("<Historical View>		* Data range from " + formatter.format(historicalResultSorted.firstKey())
+				+ " to " + formatter.format(historicalResultSorted.lastKey()));
+		
+		dollarCostAveragerTitle.setText("<Dollar Cost Averager>		* Data range is from " + formatter.format(calResultSorted.firstKey())
+		+ " to " + formatter.format(calResultSorted.lastKey()));
+
+
+		
+		//Update the charts.
+		drawDCAViewChart(calResultSorted);
+		drawCashFlowChart(cashFlowResultSorted);
+		drawHistoricalViewChart(historicalResultSorted);
+		
+		//Update the Output text values.
+		totalDividend.setText("TTL Dividend : " + accumulatedDividend.toString()); //TTL Dividend
+		totalCashInvested.setText("TTL Cash Invested : " + dca.totalCashInvested);//Growth Rate
+		growthRate.setText("Growth Rate : "); //Profit
+		
+		
+		
+		
 		
 	
 		
@@ -203,11 +238,10 @@ public class Controller implements Initializable{
 	/**
 	 * Draw the Historical View Chart based on user inputs, triggered by Run event. 
 	 */
-	public void drawHistoricalViewChart(HashMap<Date, Double>historicalData) {
+	public void drawHistoricalViewChart(TreeMap<Date, Double> historicalResultSorted) {
 		
 		historicViewChart.getData().clear();	//initialize
 
-		historicalResultSorted.putAll(historicalData);
 		
 		series = new XYChart.Series<String, Double> ();
 		
@@ -233,10 +267,11 @@ public class Controller implements Initializable{
 	/**
 	 * Method to update the DCA values from the DollarCostAveraging method. 
 	 */
-	public void drawDCAViewChart() {
+	public void drawDCAViewChart(TreeMap<Date, Double> calResultSorted) {
 		System.out.println("drawDCAViewChart is activated. ");
 		
 		DCAViewChart.getData().clear();		//initialize
+		/*
 		DollarCostAveraging dca = new DollarCostAveraging();
 		dca.run(ticker, investmentCurrency, transactionCurrency, startDates, endDates, investment, transactionCost, taxRate);
 		cashFlowResult = dca.cashFlow;
@@ -245,6 +280,7 @@ public class Controller implements Initializable{
 		Double accumulatedDividend = dca.accumulatedDividends;
 		cashFlowResultSorted.putAll(cashFlowResult);
 		calResultSorted.putAll(calResult);
+		*/
 
 		
 		DCAseries = new XYChart.Series<String, Double> ();
@@ -265,11 +301,11 @@ public class Controller implements Initializable{
 		DCAViewChart.getData().add(DCAseries);
 		DCAViewChart.setCreateSymbols(false);
 		System.out.println("Saved the data into DCAseries.");
+		/*
 		drawCashFlowChart(cashFlowResultSorted);
 		drawHistoricalViewChart(historicalResult);
+		*/
 		
-		//accumulatedDividends
-		totalDividend.setText("TTL Dividend : " + accumulatedDividend.toString());
 		
 		
 		

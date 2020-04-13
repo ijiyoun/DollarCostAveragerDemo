@@ -20,6 +20,8 @@ public class DollarCostAveraging {
 	Double transactionCost;
 	Double taxRate;
 	Double accumulatedDividends;
+	Double totalCashInvested;
+	Double growthRate;
 	
 	public static HashMap<Date, Double>calcResult;
 	public static HashMap<Date, Double>cashFlow;
@@ -73,7 +75,12 @@ public class DollarCostAveraging {
 		
 		//to get the cash flow data
 		cashFlow = myCalc.getPortfolio().getCashFlow();
-		accumulatedDividends = myCalc.getPortfolio().getAccumulatedDividends();
+		
+		//get the values to pass as output on the UI.
+		accumulatedDividends = myCalc.getPortfolio().getAccumulatedDividends(); //totaldividend
+		//growth rate
+		totalCashInvested = additionalInvestment *numDaysBetweenInvestment; //ttl cash invested
+		
 	
 		//show results in order by date
 		for (int i = 0; i < calcResult.size(); i++) {
