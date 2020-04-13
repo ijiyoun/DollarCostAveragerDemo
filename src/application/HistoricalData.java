@@ -48,33 +48,35 @@ public class HistoricalData {
 
 		HistoricalDataInstance dataInstance = new HistoricalDataInstance(null, null, null);
 
-		
+
 		Collections.sort(data);
-		
-		
-		
+
+
+
 		int i = 0;
+		//boolean found = false;
 
 
-		if (date.before(data.get(0).getDate())) { 
-			dataInstance = data.get(0); 
-		} else {
 
-			while (date.after(data.get(i).getDate()) && (i < data.size() - 1)) {
-				Date dataDate = data.get(i).getDate();
-				if (date.before(dataDate)) dataInstance = data.get(i);
-				if (date.equals(dataDate)) dataInstance = data.get(i);
-				if (i == data.size() - 1) {
-					dataInstance = data.get(i);
-				} else {
-					if (date.after(dataDate)) dataInstance = data.get(i + 1);
-				}
-				
-				i++; 
+		while (dataInstance.getDate() == null) {
+
+
+			if (date.before(data.get(0).getDate())) {
+				dataInstance = data.get(0);
+			} else if (date.equals(data.get(i).getDate())) {
+				dataInstance = data.get(i);
+
+			} else if (i + 1 == data.size()) {
+				dataInstance = data.get(data.size() - 1);
+			} else if ((date.after(data.get(i).getDate())) && (date.before(data.get(i + 1).getDate()))) {
+				dataInstance = data.get(i);
 			}
 
-
+			i++; 
 		}
+
+
+
 
 		return dataInstance;
 	}
@@ -107,7 +109,7 @@ public class HistoricalData {
 	public ArrayList<HistoricalDataInstance> getData() {
 		return data;
 	}
-	
+
 
 	/**
 	 * returns HashMap of the HistoricalData
@@ -123,29 +125,29 @@ public class HistoricalData {
 		}
 		return allData;
 	}
-	
-	
+
+
 	/**
 	 * Returns HashMap of the HistoricalData based on start and end dates
 	 * TODO: Will add Ticker later on. 
 	 */
 	public HashMap<Date, Double> returnHashMap (String startDateString, String endDateString) {
-		
+
 		Date startDate = Util.parseDate(startDateString);
 		Date endDate = Util.parseDate(endDateString);
-		
-		
+
+
 		HashMap<Date, Double> allData = new HashMap <Date, Double> ();
-		
+
 		for (HistoricalDataInstance currentInstance : data) {
 			if (startDate.before(currentInstance.getDate()) && endDate.after(currentInstance.getDate())) {
 				allData.put(currentInstance.getDate(), currentInstance.getValue());
 			}
 		}
-		
+
 		return allData;	
 	}
-	
+
 
 
 
