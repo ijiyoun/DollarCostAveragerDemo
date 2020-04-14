@@ -110,7 +110,7 @@ public class Controller implements Initializable{
 		tickerInput.getItems().addAll(dca.tickersList);
 		tickerInput.setEditable(true);
 		
-		//disable user inputs for Datepicker
+		//disable user inputs for Date picker
 		startDate.getEditor().setEditable(false);
 		endDate.getEditor().setEditable(false);
 		
@@ -119,7 +119,7 @@ public class Controller implements Initializable{
 		transactionCurrencyBox.setItems(chooseCurrencyList);
 		investmentCurrencyBox.setItems(chooseCurrencyList);
 		
-		//set the initial values of the datepicker.
+		//set the initial values of the Date picker.
 		startDate.setValue(LocalDate.of(2010, 1, 1));
 		endDate.setValue(LocalDate.now());
 		
@@ -133,9 +133,12 @@ public class Controller implements Initializable{
 		//initially text box empty so disable. 
 		runButton.disableProperty().bind(
 			    tickerInput.valueProperty().isNull()
+			    .or(investmentCurrencyBox.valueProperty().isNull())
+			    .or(transactionCurrencyBox.valueProperty().isNull())
 			    .or(Bindings.isEmpty(investmentInput.textProperty()))
 			    .or(Bindings.isEmpty(transactionCostInput.textProperty()))
 			    .or(Bindings.isEmpty(taxRateInput.textProperty()))
+			    
 			);
 		
 		//DollarCostAveraging dca = new DollarCostAveraging();
@@ -195,11 +198,11 @@ public class Controller implements Initializable{
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
 		
 		
-		historicalViewTitle.setText("<Historical View>		* Data range from " + formatter.format(historicalResultSorted.firstKey())
-				+ " to " + formatter.format(historicalResultSorted.lastKey()));
+		historicalViewTitle.setText(" Å@*Å@Data range is from " + formatter.format(dca.minimum) + 
+				" to " + formatter.format(dca.maximum) + " by " + dca.dataLimitedBy);
+
 		
-		dollarCostAveragerTitle.setText("<Dollar Cost Averager>		* Data range is from " + formatter.format(calResultSorted.firstKey())
-		+ " to " + formatter.format(calResultSorted.lastKey()));
+		//dollarCostAveragerTitle.setText("<Dollar Cost Averager>");
 
 
 		

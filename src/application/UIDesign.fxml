@@ -155,7 +155,8 @@
          <children>
             <VBox layoutX="20.0" layoutY="-2.0" prefHeight="749.0" prefWidth="601.0">
                <children>
-                  <Text fx:id="historicalViewTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Historical View&gt;" wrappingWidth="630.259765625" />
+                  <Text fx:id="historicalViewTitle" strokeType="OUTSIDE" strokeWidth="0.0" text=" " wrappingWidth="630.259765625" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Historical View&gt;" wrappingWidth="630.259765625" />
                   <LineChart fx:id="historicViewChart" prefHeight="336.0" prefWidth="624.0">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
