@@ -6,6 +6,7 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
@@ -101,10 +102,11 @@
             </VBox>
             <VBox prefHeight="910.0" prefWidth="154.0" HBox.hgrow="NEVER">
                <children>
-                  <TextField fx:id="tickerInput" prefWidth="151.0" promptText="AMZN">
+                  <ComboBox fx:id="tickerInput" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="10.0" />
-                     </VBox.margin></TextField>
+                     </VBox.margin>
+                  </ComboBox>
                   <TextField fx:id="investmentInput" promptText="1000">
                      <VBox.margin>
                         <Insets bottom="10.0" />
