@@ -208,7 +208,7 @@ public class Controller implements Initializable{
 	 */
 	public void initializeHistoricalViewChart() {
 		HistoricalData priceData = new HistoricalData();
-		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
+		priceData = ReaderCSV.readFromCSV("sp500_price.csv");
 		Date startDateForHistoricalView = Util.parseDate("1881-01-01");
 		priceData.pullClosestDataInstance(startDateForHistoricalView);
 		

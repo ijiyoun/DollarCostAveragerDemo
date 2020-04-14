@@ -27,7 +27,7 @@ class CalculationTest {
 
 	public CalculationTest() {
 		HistoricalData priceData = new HistoricalData();
-		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
+		priceData = ReaderCSV.readFromCSV("sp500_price_test.csv");
 
 		HistoricalData dividendData = new HistoricalData();
 		dividendData = ReaderCSV.readFromCSV("sp500_dividends.csv");
