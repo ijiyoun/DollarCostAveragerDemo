@@ -1,6 +1,4 @@
 package application;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -31,10 +29,36 @@ public class HistoricalData {
 	public void addNewEntry (HistoricalDataInstance newEntry) {
 
 		data.add(newEntry);
-
+		Collections.sort(data);
 
 
 	}
+
+	/**
+	 * filter a historical data object and returns
+	 * data relevant to one ticker only
+	 * @param ticker
+	 * @return HistoricalData
+	 */
+public HistoricalData filterByTicker (String ticker) {
+	HistoricalData filtered = new HistoricalData();
+	
+	for (HistoricalDataInstance current: data) {
+		if (current.getTicker().equals(ticker)) {
+			filtered.addNewEntry(current);
+		}
+		
+		
+		
+	}
+		
+	
+	
+	return filtered;
+}
+	
+	
+	
 	/**
 	 * Pulls HistoricalDataInstance with target date if it exists, 
 	 * or if it does not - the closest one BEFORE the date
@@ -49,7 +73,7 @@ public class HistoricalData {
 		HistoricalDataInstance dataInstance = new HistoricalDataInstance(null, null, null);
 
 
-		Collections.sort(data);
+		
 
 
 

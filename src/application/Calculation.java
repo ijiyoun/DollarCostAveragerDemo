@@ -36,7 +36,7 @@ public class Calculation {
 	 * @param dividendTax
 	 * @return
 	 */
-	public HashMap<Date, Double> calculateDollarCostAveraging (String startDateString, String endDateString, Double additionalInvestment, String currency, int numDaysBetweenInvestment, Boolean reinvest, Double commission, Double dividendTax) {
+	public HashMap<Date, Double> calculateDollarCostAveraging (String ticker, String startDateString, String endDateString, Double additionalInvestment, String currency, int numDaysBetweenInvestment, Boolean reinvest, Double commission, Double dividendTax) {
 
 
 		HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
@@ -49,8 +49,8 @@ public class Calculation {
 		Date loopDate = startDate;
 		Date nextDateToAddCash = startDate;
 		
-		
-
+		//filter historical data for the current data
+		HistoricalData priceDataFiltered = priceData.filterByTicker(ticker);
 
 
 		Double totalInvested = 0.0; //hold aggregated investment amount to pass to Portfolio cashFlow
@@ -109,14 +109,14 @@ public class Calculation {
 			
 			if (cashToInvest > commission) {
 
-					myPortfolio.buyAssetByAmount("", cashToInvest,commission, loopDate, priceData.pullClosestDataInstance(loopDate).getValue());
+					myPortfolio.buyAssetByAmount("", cashToInvest,commission, loopDate, priceDataFiltered.pullClosestDataInstance(loopDate).getValue());
 				
 			}
 
 
 
 			//calculate total value and add to the output HashMpap
-			Double totalValue = myPortfolio.updateAndReturnTotalValue(loopDate, priceData);	
+			Double totalValue = myPortfolio.updateAndReturnTotalValue(loopDate, priceDataFiltered);	
 			calcResult.put(loopDate, totalValue);
 
 

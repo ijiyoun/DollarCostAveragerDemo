@@ -341,7 +341,7 @@ public class Controller implements Initializable{
 		System.out.println("drawDCAViewChart is activated. ");
 		
 		DollarCostAveraging dca = new DollarCostAveraging();
-		dca.run("AMZN", "USD", "USD", "2010-01-01", "2015-01-01", 1000.0, 100.0, 3.1);
+		dca.run("S&P 500", "USD", "USD", "2010-01-01", "2015-01-01", 1000.0, 100.0, 3.1);
 		cashFlowResult = dca.cashFlow;
 		cashFlowResultSorted.putAll(cashFlowResult);
 		calResult = dca.calcResult;

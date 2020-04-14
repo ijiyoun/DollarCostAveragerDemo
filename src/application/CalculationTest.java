@@ -22,6 +22,8 @@ class CalculationTest {
 	Boolean reinvest;
 	Double commission;
 	Double dividendTax;
+	
+	String ticker = "S&P 500";
 
 	public CalculationTest() {
 		HistoricalData priceData = new HistoricalData();
@@ -41,7 +43,7 @@ class CalculationTest {
 	}
 
 	public void executeTest( ) {
-		calcResult = myCalc.calculateDollarCostAveraging (startDateString, endDateString, additionalInvestment, currency, numDaysBetweenInvestment, reinvest, commission, dividendTax);
+		calcResult = myCalc.calculateDollarCostAveraging (ticker, startDateString, endDateString, additionalInvestment, currency, numDaysBetweenInvestment, reinvest, commission, dividendTax);
 	}
 
 	

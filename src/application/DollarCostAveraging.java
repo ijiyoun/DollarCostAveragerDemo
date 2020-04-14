@@ -9,8 +9,8 @@ import java.util.*;
  */
 
 public class DollarCostAveraging {
-	
-	
+
+
 	String ticker;
 	String investmentCurrency;
 	String transactionCurrency;
@@ -22,7 +22,7 @@ public class DollarCostAveraging {
 	Double accumulatedDividends;
 	Double totalCashInvested;
 	Double growthRate;
-	
+
 	public static HashMap<Date, Double>calcResult;
 	public static HashMap<Date, Double>cashFlow;
 	public static HashMap<Date, Double>historicalData;
@@ -32,8 +32,8 @@ public class DollarCostAveraging {
 	 */
 	void run (String ticker, String investmentCurrency, String transactionCurrency, String startDates, String endDates,
 			Double investment, Double transactionCost, Double taxRate) {
-		
-		
+
+
 		//enter values for calculation. 
 		this.ticker =ticker;
 		this.investmentCurrency = investmentCurrency;
@@ -43,45 +43,45 @@ public class DollarCostAveraging {
 		additionalInvestment = investment;
 		this.transactionCost = transactionCost;
 		this.taxRate = taxRate;
-		
+
 
 		//read price data
 		HistoricalData priceData = new HistoricalData();
 		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
-		
+
 		//read dividend data
 		HistoricalData dividendData = new HistoricalData();
 		dividendData = ReaderCSV.readFromCSV("sp500_dividends.csv");
-		
-		
+
+
 		//read FX data
 		//code to be added 
-		
+
 		//passing historical data hashmap
 		historicalData = priceData.returnHashMap(startDateString, endDateString);
-		
+
 		System.out.println(ticker + investmentCurrency + transactionCurrency + startDates + endDates + investment + transactionCost + taxRate);
 		int numDaysBetweenInvestment = 30;
 		boolean reinvest = false;
-		
-		
+
+
 		//COMMENT: is it better to have a separate method to return the values? 
 		Portfolio myPortfolio = new Portfolio();
 		Calculation myCalc = new Calculation(myPortfolio, priceData, dividendData, null);
-		
+
 		//HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
 		calcResult = new HashMap<Date, Double>();
-		calcResult = myCalc.calculateDollarCostAveraging(startDateString, endDateString, additionalInvestment, transactionCurrency, numDaysBetweenInvestment, reinvest, transactionCost, taxRate);
-		
+		calcResult = myCalc.calculateDollarCostAveraging(ticker, startDateString, endDateString, additionalInvestment, transactionCurrency, numDaysBetweenInvestment, reinvest, transactionCost, taxRate);
+
 		//to get the cash flow data
 		cashFlow = myCalc.getPortfolio().getCashFlow();
-		
+
 		//get the values to pass as output on the UI.
 		accumulatedDividends = myCalc.getPortfolio().getAccumulatedDividends(); //totaldividend
 		//growth rate
 		totalCashInvested = additionalInvestment *numDaysBetweenInvestment; //ttl cash invested
-		
-	
+
+
 		//show results in order by date
 		for (int i = 0; i < calcResult.size(); i++) {
 			Calendar c = Calendar.getInstance();
@@ -90,20 +90,14 @@ public class DollarCostAveraging {
 			Date dateToPrint = c.getTime();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			System.out.println(sdf.format(dateToPrint) + " total value is " + calcResult.get(dateToPrint));
-			
+
 		}
+
+
 		
-		
-		/**
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		for (Date date : calcResult.keySet()) {
-			System.out.println(sdf.format(date) + " total value is " + calcResult.get(date));
-			
-		}
-			**/
-		
-			
-		
+
+
+
 	}
 
 }

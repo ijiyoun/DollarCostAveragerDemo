@@ -18,6 +18,8 @@ class HistoricalDataTest {
 		
 		HistoricalData priceData = new HistoricalData();
 		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
+		priceData = priceData.filterByTicker("S&P 500");
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		Date date = new Date();
@@ -52,5 +54,12 @@ class HistoricalDataTest {
 	@Test
 	void testPullClosestDataInstance4() {
 		assertEquals(2170.95, runTest("2016-08-15"));
+	}
+	
+	@Test
+	void testFilteringFunction () {
+		HistoricalData data = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
+		HistoricalData filtered = data.filterByTicker("S&P 500");
+		assertEquals(1764.0, filtered.getData().size());
 	}
 }
