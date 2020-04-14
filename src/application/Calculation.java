@@ -15,13 +15,13 @@ public class Calculation {
 	Portfolio myPortfolio;
 	HistoricalData priceData; 
 	HistoricalData dividendData; 
-	HistoricalData foreignExchangeData;
+	HistoricalData fxData; //foreign exchange
 
 
-	public Calculation (Portfolio myPortfolio, HistoricalData priceData, HistoricalData dividendData, HistoricalData foreignExchangeData) {
+	public Calculation (Portfolio myPortfolio, HistoricalData priceData, HistoricalData dividendData, HistoricalData fxData) {
 		this.priceData = priceData;
 		this.dividendData = dividendData;
-		this.foreignExchangeData = foreignExchangeData;
+		this.fxData = fxData;
 		this.myPortfolio = myPortfolio;
 		
 		
@@ -88,12 +88,17 @@ public class Calculation {
 			//add incremental cash if equals next investment date
 			if (loopDate.equals(nextDateToAddCash)) {
 
-				//add code to exchange incremental investment to USD if needed
-
-				myPortfolio.addCashBalance(additionalInvestment);
+				//foreign exchange adjustment 
+				if (currency.equals("USD")) { // 
+					myPortfolio.addCashBalance(additionalInvestment);
+					totalInvested += additionalInvestment;
+				} else {
+					Double exchangeRate = fxData.pullClosestDataInstance(loopDate).getValue();
+					myPortfolio.addCashBalance(additionalInvestment / exchangeRate); //converting to JPY
+					totalInvested += additionalInvestment / exchangeRate;
+				}
 				
 				//store aggregated total investment amount
-				totalInvested += additionalInvestment;
 				myPortfolio.addCashFlow(loopDate, totalInvested);
 
 				//calculate date for the next investment

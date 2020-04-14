@@ -10,7 +10,7 @@ import java.util.*;
 
 public class DollarCostAveraging {
 
-
+	
 	String ticker;
 	String investmentCurrency;
 	String transactionCurrency;
@@ -57,10 +57,10 @@ public class DollarCostAveraging {
 		HistoricalData dividendData = new HistoricalData();
 		dividendData = ReaderCSV.readFromCSV("sp500_dividends.csv");
 
-
 		//read FX data
-		//code to be added 
-
+		HistoricalData fxData = new HistoricalData();
+		fxData = ReaderCSV.readFromCSV("usdjpy.csv");
+		
 		
 		
 		//calculate minimum/maximum date range
@@ -72,14 +72,14 @@ public class DollarCostAveraging {
 		//passing historical data hashmap
 		historicalData = priceData.returnHashMap(startDateString, endDateString);
 
-		System.out.println(ticker + investmentCurrency + transactionCurrency + startDates + endDates + investment + transactionCost + taxRate);
+		//System.out.println(ticker + investmentCurrency + transactionCurrency + startDates + endDates + investment + transactionCost + taxRate);
 		int numDaysBetweenInvestment = 30;
 		boolean reinvest = false;
 
 
 		//COMMENT: is it better to have a separate method to return the values? 
 		Portfolio myPortfolio = new Portfolio();
-		Calculation myCalc = new Calculation(myPortfolio, priceData, dividendData, null);
+		Calculation myCalc = new Calculation(myPortfolio, priceData, dividendData, fxData);
 
 		//HashMap<Date, Double> calcResult = new HashMap<Date, Double>();
 		calcResult = new HashMap<Date, Double>();

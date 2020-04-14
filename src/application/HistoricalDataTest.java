@@ -11,27 +11,15 @@ class HistoricalDataTest {
 
 /**
  * runs test based on s&p csv
- * @param test in format "1872-02-01"
+ * @param date in format "1872-02-01"
  * @return
  */
-	public Double runTest (String test) {
+	public Double runTest (String date) {
 		
 		HistoricalData priceData = new HistoricalData();
 		priceData = ReaderCSV.readFromCSV("sp500_price_test.csv");
 		priceData = priceData.filterByTicker("S&P 500");
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		
-		Date date = new Date();
-		try {
-			date = sdf.parse(test);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(priceData.pullClosestDataInstance(date).getValue());
-		
-		return priceData.pullClosestDataInstance(date).getValue();
+		return priceData.pullClosestDataInstance(Util.parseDate(date)).getValue();
 
 	}
 
@@ -61,5 +49,13 @@ class HistoricalDataTest {
 		HistoricalData data = ReaderCSV.readFromCSV("sp500_price_test.csv");
 		HistoricalData filtered = data.filterByTicker("S&P 500");
 		assertEquals(1764.0, filtered.getData().size());
+	}
+	
+	@Test
+	void testFXdata() {
+		HistoricalData data = ReaderCSV.readFromCSV("usdjpy.csv");
+		HistoricalData filtered = data.filterByTicker("USDJPY");
+		Double result = filtered.pullClosestDataInstance(Util.parseDate("2019-10-11")).getValue();
+		assertEquals(108.52, result);	
 	}
 }
