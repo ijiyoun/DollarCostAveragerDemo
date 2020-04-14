@@ -171,6 +171,22 @@ public HistoricalData filterByTicker (String ticker) {
 
 		return allData;	
 	}
+	
+	/**
+	 * Return ArrayList of tickers. 
+	 * @return
+	 */
+	public ArrayList<String> returnTickerLists () {
+		
+		ArrayList<String> tickerLists = new ArrayList<>();
+		
+		for (HistoricalDataInstance currentInstance : data) {
+			tickerLists.add(currentInstance.getTicker());
+			
+		}		
+		
+		return tickerLists;
+	}
 
 
 
