@@ -17,7 +17,7 @@ class HistoricalDataTest {
 	public Double runTest (String test) {
 		
 		HistoricalData priceData = new HistoricalData();
-		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
+		priceData = ReaderCSV.readFromCSV("sp500_price_test.csv");
 		priceData = priceData.filterByTicker("S&P 500");
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -58,7 +58,7 @@ class HistoricalDataTest {
 	
 	@Test
 	void testFilteringFunction () {
-		HistoricalData data = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
+		HistoricalData data = ReaderCSV.readFromCSV("sp500_price_test.csv");
 		HistoricalData filtered = data.filterByTicker("S&P 500");
 		assertEquals(1764.0, filtered.getData().size());
 	}

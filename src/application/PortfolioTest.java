@@ -15,7 +15,7 @@ class PortfolioTest {
 		this.myPortfolio = myPortfolio;
 		
 		HistoricalData priceData = new HistoricalData();
-		priceData = ReaderCSV.readFromCSV("sp500_monthly_data_csv.csv");
+		priceData = ReaderCSV.readFromCSV("sp500_price.csv");
 		this.priceData = priceData;
 		
 		HistoricalData dividendData = new HistoricalData();

@@ -60,6 +60,7 @@ public class Calculation {
 		
 		//filter historical data for the current data
 		HistoricalData priceDataFiltered = priceData.filterByTicker(ticker);
+		HistoricalData dividendDataFiltered = dividendData.filterByTicker(ticker);
 
 
 		Double totalInvested = 0.0; //hold aggregated investment amount to pass to Portfolio cashFlow
@@ -80,9 +81,9 @@ public class Calculation {
 **/			//cash all previously calculated dividends
 			myPortfolio.cashDividendsPendingReceival(loopDate);
 			//add dividends if they are distributed on this day			
-			if (dividendData.exist(loopDate)) {
+			if (dividendDataFiltered.exist(loopDate)) {
 				
-				myPortfolio.addDividendsToPendingReceival(loopDate, dividendData, dividendTax);
+				myPortfolio.addDividendsToPendingReceival(loopDate, dividendDataFiltered, dividendTax);
 				
 
 			}
