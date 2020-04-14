@@ -27,6 +27,9 @@ public class DollarCostAveraging {
 	public static HashMap<Date, Double>cashFlow;
 	public static HashMap<Date, Double>historicalData;
 	
+	Date minimum;
+	Date maximum;
+	String dataLimitedBy;
 
 	/**
 	 * runs dollar cost averaging calculation
@@ -58,6 +61,14 @@ public class DollarCostAveraging {
 		//read FX data
 		//code to be added 
 
+		
+		
+		//calculate minimum/maximum date range
+		minimum = Collections.min(priceData.getData()).getDate();
+		maximum = Collections.max(priceData.getData()).getDate();
+		dataLimitedBy = "price data";
+		
+		
 		//passing historical data hashmap
 		historicalData = priceData.returnHashMap(startDateString, endDateString);
 
