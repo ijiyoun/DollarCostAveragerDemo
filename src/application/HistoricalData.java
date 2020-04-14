@@ -180,9 +180,12 @@ public HistoricalData filterByTicker (String ticker) {
 		
 		ArrayList<String> tickerLists = new ArrayList<>();
 		
+		
 		for (HistoricalDataInstance currentInstance : data) {
-			tickerLists.add(currentInstance.getTicker());
 			
+			if(!tickerLists.contains(currentInstance.getTicker())) {
+				tickerLists.add(currentInstance.getTicker());
+			}
 		}		
 		
 		return tickerLists;

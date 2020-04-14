@@ -27,6 +27,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -59,7 +60,8 @@ public class Controller implements Initializable{
 	
 	
 	
-	@FXML private TextField tickerInput;
+	
+	@FXML private ComboBox tickerInput;
 	@FXML private LineChart<String, Double>historicViewChart; // need to define X,Y
 	Series<String, Double> series = null; //need to generate line
 	@FXML private LineChart<String, Double>DCAViewChart;
@@ -103,9 +105,10 @@ public class Controller implements Initializable{
 		drawCashFlowChart(cashFlowResultSorted);
 		drawHistoricalViewChart(historicalResultSorted);
 		
-		//disable the button if not all the inputs are made. 
+		 
 		//confirm tickers inputs
-		
+		tickerInput.getItems().addAll(dca.tickersList);
+		tickerInput.setEditable(true);
 		
 		//disable user inputs for Datepicker
 		startDate.getEditor().setEditable(false);
@@ -129,7 +132,7 @@ public class Controller implements Initializable{
 		
 		//initially text box empty so disable. 
 		runButton.disableProperty().bind(
-			    Bindings.isEmpty(tickerInput.textProperty())
+			    tickerInput.valueProperty().isNull()
 			    .or(Bindings.isEmpty(investmentInput.textProperty()))
 			    .or(Bindings.isEmpty(transactionCostInput.textProperty()))
 			    .or(Bindings.isEmpty(taxRateInput.textProperty()))
@@ -166,7 +169,7 @@ public class Controller implements Initializable{
 		
 		Calculation myCalc;
 		//Store the input data
-		ticker = tickerInput.getText().toString();
+		ticker = tickerInput.getSelectionModel().getSelectedItem().toString();
 		startDates = startDate.getValue().toString();
 		endDates = endDate.getValue().toString();
 		investmentCurrency = investmentCurrencyBox.getSelectionModel().getSelectedItem().toString();

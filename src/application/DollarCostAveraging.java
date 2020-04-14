@@ -26,6 +26,8 @@ public class DollarCostAveraging {
 	public static HashMap<Date, Double>calcResult;
 	public static HashMap<Date, Double>cashFlow;
 	public static HashMap<Date, Double>historicalData;
+	ArrayList<String> tickersList;
+	
 	
 	Date minimum;
 	Date maximum;
@@ -92,6 +94,9 @@ public class DollarCostAveraging {
 		accumulatedDividends = myCalc.getPortfolio().getAccumulatedDividends(); //totaldividend
 		//growth rate
 		totalCashInvested = additionalInvestment *numDaysBetweenInvestment; //ttl cash invested
+		
+		//get the ticker list
+		tickersList = priceData.returnTickerLists(); 
 
 
 		//show results in order by date
