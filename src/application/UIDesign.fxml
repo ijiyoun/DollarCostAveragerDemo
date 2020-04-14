@@ -8,7 +8,9 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -33,6 +35,19 @@
          <children>
             <VBox prefHeight="910.0" prefWidth="206.0">
                <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choose the source of data:">
+                     <VBox.margin>
+                        <Insets bottom="15.0" left="10.0" right="15.0" top="5.0" />
+                     </VBox.margin>
+                  </Text>
+                  <RadioButton fx:id="readFromCSV" mnemonicParsing="false" text="Read from CSV">
+                     <VBox.margin>
+                        <Insets bottom="15.0" left="10.0" right="15.0" top="5.0" />
+                     </VBox.margin>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="dataSource" />
+                     </toggleGroup>
+                  </RadioButton>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ticker">
                      <VBox.margin>
                         <Insets bottom="15.0" left="10.0" right="15.0" top="5.0" />
@@ -102,6 +117,12 @@
             </VBox>
             <VBox prefHeight="910.0" prefWidth="154.0" HBox.hgrow="NEVER">
                <children>
+                  <Region prefHeight="38.0" prefWidth="143.0" />
+                  <RadioButton fx:id="readFromAPI" mnemonicParsing="false" text="Read from API" toggleGroup="$dataSource">
+                     <VBox.margin>
+                        <Insets bottom="15.0" left="10.0" right="15.0" top="5.0" />
+                     </VBox.margin>
+                  </RadioButton>
                   <ComboBox fx:id="tickerInput" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="10.0" />

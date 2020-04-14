@@ -21,6 +21,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
@@ -29,6 +30,7 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
@@ -56,7 +58,7 @@ public class Controller implements Initializable{
 	TreeMap<Date, Double> historicalResultSorted = new TreeMap<Date, Double>();
 	HashMap<Date, Double> cashFlowResult = new HashMap<Date, Double>();
 	TreeMap<Date, Double> cashFlowResultSorted = new TreeMap<Date, Double>();
-	
+	Boolean selectReadFromCSV;
 	
 	
 	
@@ -81,6 +83,8 @@ public class Controller implements Initializable{
 	@FXML private Text totalDividend;
 	@FXML private Text dollarCostAveragerTitle;
 	@FXML private Text historicalViewTitle;
+	@FXML private RadioButton readFromCSV;
+	@FXML private RadioButton readFromAPI;
 	
 	
 	
@@ -105,11 +109,41 @@ public class Controller implements Initializable{
 		drawCashFlowChart(cashFlowResultSorted);
 		drawHistoricalViewChart(historicalResultSorted);
 		
-		 
+		//confirm the data source input and respond with ticker choice. 
+		
+		readFromCSV.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue)
+			{
+				tickerInput.setEditable(false);
+				tickerInput.getItems().addAll(dca.tickersList);
+				selectReadFromCSV = true;
+				System.out.println("Select read from csv is true");
+			}
+			else
+			{
+				tickerInput.getItems().clear();
+				tickerInput.setEditable(true);
+				selectReadFromCSV = false;
+			}
+		});
+		
+		readFromAPI.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue)
+			{
+				tickerInput.getItems().clear();
+				tickerInput.setEditable(true);
+				selectReadFromCSV = false;
+			}
+		});
+		
+		
+
+		
 		//confirm tickers inputs
+		/*
 		tickerInput.getItems().addAll(dca.tickersList);
 		tickerInput.setEditable(true);
-		
+		*/
 		//disable user inputs for Date picker
 		startDate.getEditor().setEditable(false);
 		endDate.getEditor().setEditable(false);
