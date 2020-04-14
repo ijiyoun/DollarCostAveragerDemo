@@ -136,14 +136,6 @@ public class Controller implements Initializable{
 			}
 		});
 		
-		
-
-		
-		//confirm tickers inputs
-		/*
-		tickerInput.getItems().addAll(dca.tickersList);
-		tickerInput.setEditable(true);
-		*/
 		//disable user inputs for Date picker
 		startDate.getEditor().setEditable(false);
 		endDate.getEditor().setEditable(false);
@@ -175,7 +167,6 @@ public class Controller implements Initializable{
 			    
 			);
 		
-		//DollarCostAveraging dca = new DollarCostAveraging();
 		
 
 	}

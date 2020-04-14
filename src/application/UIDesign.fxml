@@ -35,7 +35,7 @@
          <children>
             <VBox prefHeight="910.0" prefWidth="206.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choose the source of data:">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="First, select the source of data:">
                      <VBox.margin>
                         <Insets bottom="15.0" left="10.0" right="15.0" top="5.0" />
                      </VBox.margin>
