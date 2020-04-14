@@ -26,6 +26,7 @@ public class DollarCostAveraging {
 	public static HashMap<Date, Double>calcResult;
 	public static HashMap<Date, Double>cashFlow;
 	public static HashMap<Date, Double>historicalData;
+	
 
 	/**
 	 * runs dollar cost averaging calculation

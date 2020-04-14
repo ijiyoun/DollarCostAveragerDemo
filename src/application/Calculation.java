@@ -16,12 +16,21 @@ public class Calculation {
 	HistoricalData priceData; 
 	HistoricalData dividendData; 
 	HistoricalData foreignExchangeData;
+	Date minimum;
+	Date maximum;
+	String dataLimitedBy;
 
 	public Calculation (Portfolio myPortfolio, HistoricalData priceData, HistoricalData dividendData, HistoricalData foreignExchangeData) {
 		this.priceData = priceData;
 		this.dividendData = dividendData;
 		this.foreignExchangeData = foreignExchangeData;
 		this.myPortfolio = myPortfolio;
+		
+		//calculate minimum/maximum date range
+		minimum = Collections.min(priceData.getData()).getDate();
+		maximum = Collections.max(priceData.getData()).getDate();
+		dataLimitedBy = "price data";
+		
 	}
 
 	/**

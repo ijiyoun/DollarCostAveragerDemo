@@ -148,6 +148,7 @@ public class Controller implements Initializable{
 		
 		Calculation myCalc;
 		//Store the input data
+		ticker = tickerInput.getText().toString();
 		startDates = startDate.getValue().toString();
 		endDates = endDate.getValue().toString();
 		investmentCurrency = investmentCurrencyBox.getSelectionModel().getSelectedItem().toString();
