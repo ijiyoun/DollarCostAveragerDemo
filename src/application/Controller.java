@@ -62,7 +62,7 @@ public class Controller implements Initializable{
 	
 	
 	
-	
+	//To push the change
 	@FXML private ComboBox tickerInput;
 	@FXML private LineChart<String, Double>historicViewChart; // need to define X,Y
 	Series<String, Double> series = null; //need to generate line
